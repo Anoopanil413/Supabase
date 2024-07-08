@@ -1,24 +1,25 @@
 import { useState } from 'react'
 
 import './App.css'
-import Buttons from './components/Button'
-import icontest from './assets/icontest.svg'
-import Floatbutton from './components/Floatbutton'
-import { Flex } from 'antd'
-import FunForm from './components/FunForm'
-import Forms from './components/Forms'
-import Login from './Pages/Login'
+
+
+import Routes from './Authentication'
+import { store } from './Store/store'
+import { Provider } from 'react-redux'
 
 function App() {
 
 
-  return (
+  return(
     <>
-    <Login/>
+    <Provider store={store}>
+    <Routes/>
+    </Provider>,
 
- 
     </>
   )
+
+    
 }
 
 export default App

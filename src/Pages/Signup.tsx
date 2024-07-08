@@ -1,50 +1,70 @@
-import React, { useEffect, useState } from 'react'
-import FunForm from '../components/FunForm'
-import supabase from '../supabase'
-import { Auth } from "@supabase/auth-ui-react";
-import { ThemeSupa } from "@supabase/auth-ui-shared";
+// import React, { useEffect, useState } from 'react'
+import { useNavigate } from "react-router-dom";
+import FunForm from "../components/FunForm";
+import supabase from "../supabase";
+// import { Auth } from "@supabase/auth-ui-react";
+// import { ThemeSupa } from "@supabase/auth-ui-shared";
 
 const SignUp = () => {
+  const navigate = useNavigate();
 
+  // const [session, setSession] = useState(null);
 
+  // useEffect(() => {
 
-  const [session, setSession] = useState(null);
+  //     supabase.auth.getSession().then(({ data: { session } }) => {
+  //       setSession(session);
+  //     });
+  //     const {
+  //       data: { subscription },
+  //     } = supabase.auth.onAuthStateChange((_event, session) => {
+  //       setSession(session);
+  //     });
+  //     return () => subscription.unsubscribe();
+  //   }, []);
 
-  useEffect(() => {
-      
-      supabase.auth.getSession().then(({ data: { session } }) => {
-        setSession(session);
-      });
-      const {
-        data: { subscription },
-      } = supabase.auth.onAuthStateChange((_event, session) => {
-        setSession(session);
-      });
-      return () => subscription.unsubscribe();
-    }, []);
+  const register = (email: any, password: any) =>
+    supabase.auth.signUp({ email, password });
 
-  const register = (email:any, password:any) =>
-      supabase.auth.signUp({ email, password });
+  const handleSignupSubmit = async (dataa: {
+    password: any;
+    useremail: any;
+  }) => {
+    const { password, useremail } = dataa;
+    console.log(useremail);
 
+    const { data, error } = await register(useremail, password);
 
-  const handleSignupSubmit = async(dataa:{password:any,useremail:any})=>{
+    console.log("chekingt he data from form", data, error);
+    if(error)return
+    if(data.user){
+      const { error: profileError } = await supabase
+      .from('profiles')
+      .insert({ id: data?.user.id, email: data?.user.email });
 
-      const { password,useremail} = dataa
-      console.log(useremail)
-
-      const { data, error } = await register(
-          useremail,
-          password
-        );
-
-        console.log("chekingt he data from form",data, error )
-
+      if(profileError)return
+  
+      navigate("/signin");
     }
-return (
-  <>
 
-  {/* <FunForm handleSubmit= {handleSignupSubmit}/> */}
-  { !session ?
+  };
+  return (
+    <>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+        }}
+      >
+        <div>Signup</div>
+        <div className="LoginPage">
+          <FunForm handleSubmit={handleSignupSubmit} />
+        </div>
+      </div>
+
+      {/* { !session ?
 
 
 (
@@ -76,12 +96,9 @@ return (
   </>
 )
   
-  }
+  } */}
+    </>
+  );
+};
 
-
-  </>
-
-)
-}
-
-export default SignUp
+export default SignUp;
