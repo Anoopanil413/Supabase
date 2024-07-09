@@ -8,7 +8,7 @@ interface propsType {
     disabled?:boolean;
     text:string;
     className?:string
-    handleClick?:(event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+    handleClick?: any ;
     iconPosition?:'start' | 'end';
     icon?:ReactNode;
     ghost?:boolean;

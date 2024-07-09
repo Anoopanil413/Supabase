@@ -8,6 +8,8 @@ import {
   import Signin from "../Pages/Login";
   import Signup from "../Pages/Signup";
 import Protected from "./protected";
+import Chat from "../Pages/Chat";
+
 
 
   const router = createBrowserRouter(
@@ -15,6 +17,7 @@ import Protected from "./protected";
       <Route path="/">
         <Route element={<Protected />}>
           <Route index  element={<Home />} />
+          <Route path="chat" element={<Chat/>}/>
         </Route>
         <Route path="signin" element={<Signin />} />
         <Route path="signup" element={<Signup />} />

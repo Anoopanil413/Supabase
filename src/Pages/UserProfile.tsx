@@ -40,6 +40,7 @@ const UserProfileModal = () => {
       });
     }
 
+
   },[profile])
 
   const handleCancel = () => {
@@ -49,15 +50,13 @@ const UserProfileModal = () => {
     setFileList([]);
   };
 
-  const handleOk = async() => {
+  const handleOk = async(event:any) => {
     try {
+      event.preventDefault()
       const values = await form.validateFields()
       const avatar_file = fileList.length ? fileList[0]?.originFileObj : null;
-      console.log("value of url before",avatar_file)
       const val = await dispatch(createProfile({ ...values, avatar_url: avatar_file }));
-      console.log("values aftyer",val)
       setVisible(false);
-
 
     } catch (error) {
       console.log('ERRROR::',error)
@@ -91,7 +90,7 @@ const UserProfileModal = () => {
         onCancel={handleCancel}
         onOk={handleOk}
       >
-      <Avatar shape="square" size={100} icon={<UserOutlined />} src={avtar}/>
+      <Avatar shape="square" size={100} icon={<UserOutlined />} src={profile?.avatar_url? profile?.avatar_url: avtar}/>
 
         <Form form={form} layout="vertical">
           <Form.Item

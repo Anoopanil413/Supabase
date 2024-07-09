@@ -7,7 +7,7 @@ import {
   VideoCameraOutlined,
 } from '@ant-design/icons';
 import { Button, Layout, Menu, theme } from 'antd';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { Avatar, Badge, Space } from 'antd';
 import { setModalView } from '../features/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
@@ -15,13 +15,18 @@ import { useDispatch, useSelector } from 'react-redux';
 const { Header, Sider, Content } = Layout;
 
 const Layouts: React.FC = () => {
+  const viewModal = useSelector((state:any)=>state.users)
+
   const [collapsed, setCollapsed] = useState(false);
+
+  const [modalView,setModalsView] = useState(viewModal.viewModal)
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
   const dispatch = useDispatch()
-  const viewModal = useSelector((state:any)=>state.users)
+
+  const navigate = useNavigate()
 
   return (
     <Layout>
@@ -35,12 +40,16 @@ const Layouts: React.FC = () => {
             {
               key: '1',
               icon: <UserOutlined />,
-              label: 'nav 1',
+              label: 'home',
+              onClick:()=>navigate('/')
+              
             },
             {
               key: '2',
               icon: <VideoCameraOutlined />,
-              label: 'nav 2',
+              label: 'chat',
+              onClick:()=>navigate('/chat')
+
             },
             {
               key: '3',
@@ -64,7 +73,10 @@ const Layouts: React.FC = () => {
           />
 
 <Badge dot>
-      <Avatar shape="square" icon={<UserOutlined />}onClick={()=>dispatch(setModalView(!viewModal.viewModal))}/>
+      <Avatar shape="square" icon={<UserOutlined />} onClick={()=>{
+        console.log("clickimng",modalView)
+        setModalsView(!modalView)
+        dispatch(setModalView(modalView))}}/>
     </Badge>
 
         </Header>

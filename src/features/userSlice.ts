@@ -15,57 +15,193 @@ export const fetchProfile:any = createAsyncThunk('users/fetchProfile', async (us
     .select('*')
     .eq('id', userId)
     .single();
-
-
   if (error) {
     return rejectWithValue(error.message);
   }
   return profile;
 });
 
+
+
+export const fetchInitialChannels:any = createAsyncThunk(
+  'channels/fetchInitialChannels',
+  async (_, { rejectWithValue }) => {
+    try {
+      const { data, error } = await supabase
+        .from('channels')
+        .select('*');
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+
+export const SubscribetoChannels:any = createAsyncThunk(
+  'users/subscribeChannels',
+  async (_, {dispatch, rejectWithValue }) => {
+    const channelSubscribed = await supabase
+      .channel('channels_chain')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'channels'
+        },
+        (payload) =>{
+          dispatch(addChannel(payload.new));
+        } 
+      )
+      .subscribe();
+
+    if (!channelSubscribed) {
+      return rejectWithValue('Failed to subscribe to channels database');
+    }
+
+    return channelSubscribed;
+  }
+);
+
+export const unsubscribeFromChannels:any = createAsyncThunk(
+  'users/unsubscribeChannels',
+  async (_, { rejectWithValue }) => {
+    const val = await supabase.channel('channels').unsubscribe();
+
+    if (val == 'error') {
+      return rejectWithValue('Failed to unsubscribe from channels database');
+    }
+
+    return true;
+  }
+);
+export const subscribeToMessages:any = createAsyncThunk(
+  'users/subscribeMessages',
+  async (channelName:string, { rejectWithValue }) => {
+    const myChannel = supabase.channel(channelName, {
+      config: {
+        broadcast: { ack: true },
+      },
+    });
+
+    const broadcastChannel = await myChannel.subscribe(async (status) => {
+      if (status !== 'SUBSCRIBED') {
+        return false;
+      }
+
+      const serverResponse = await myChannel.send({
+        type: 'broadcast',
+        event: 'acknowledge',
+        payload: {},
+      });
+
+      console.log('serverResponse', serverResponse);
+
+      return true;
+    });
+
+    if (!broadcastChannel) {
+      return rejectWithValue('Failed to subscribe to messages channel');
+    }
+
+    const sendMessage = (message:string) => {
+      myChannel.send({
+        type: 'broadcast',
+        event: 'message',
+        payload: { message },
+      });
+    };
+
+    const listenMessages = (callback:any) => {
+      myChannel.on('broadcast', { event: 'message' }, (payload) => {
+        callback(payload);
+      });
+    };
+
+    return { broadcastChannel, sendMessage, listenMessages };
+  }
+);
+
+export const unsubscribeFromMessages:any = createAsyncThunk(
+  'users/unsubscribeMessages',
+  async (_, { rejectWithValue }) => {
+    const val = await supabase.channel('message_broadcast').unsubscribe();
+
+    if (val == 'error') {
+      return rejectWithValue('Failed to unsubscribe from messages channel');
+    }
+
+    return true;
+  }
+);
+
+
+
+
 export const createProfile:any = createAsyncThunk('users/createProfile', async (profileData:any, { rejectWithValue }) => {
   try {
     let avatar_url = profileData.avatar_url;
 
-
-    if (profileData.avatar_file) {
+    if (profileData.avatar_url) {
 
       const { data, error: uploadError } = await supabase.storage
         .from('avatars')
-        .upload(`public/${profileData.username}-${Date.now()}`, profileData.avatar_file);
+        .upload(`public/${profileData.username}-${Date.now()}`, profileData.avatar_url);
 
       if (uploadError) {
-        console.log("urllll",uploadError)
+        console.log("Error",uploadError)
 
         throw new Error(uploadError.message);
       }
 
-      const { publicURL, error: urlError } = supabase.storage
+      const publicURL = await supabase.storage
         .from('avatars')
         .getPublicUrl(data.path);
 
-      if (urlError) {
-        throw new Error(urlError.message);
+      if (!publicURL) {
+        throw new Error("no image url ");
       }
-      console.log("urllll",publicURL)
-      avatar_url = publicURL;
+      avatar_url = publicURL.data.publicUrl;
+
+
+      const session = await supabase.auth.getSession();
+      if (!session) {
+        throw new Error("User is not authenticated");
+      }
+      const userId = session.data.session?.user.id;
+  
+      const { error: upsertError } = await supabase
+        .from('profiles')
+        .upsert({ ...profileData, id: userId, avatar_url }, { onConflict: ['id'] });
+  
+      if (upsertError) {
+        throw new Error(upsertError.message);
+      }
+  
+      return { ...profileData, id: userId, avatar_url };
+    }else{
+      const session = await supabase.auth.getSession();
+      if (!session) {
+        throw new Error("User is not authenticated");
+      }
+      const userId = session.data.session?.user.id;
+  
+      const { error: upsertError } = await supabase
+        .from('profiles')
+        .upsert({ ...profileData, id: userId, avatar_url }, { onConflict: ['id'] });
+  
+      if (upsertError) {
+        throw new Error(upsertError.message);
+      }
+  
+      return { ...profileData, id: userId, avatar_url };
     }
 
-    const session = await supabase.auth.getSession();
-    if (!session) {
-      throw new Error("User is not authenticated");
-    }
-    const userId = session.data.session?.user.id;
-
-    const { error: upsertError } = await supabase
-      .from('profiles')
-      .upsert({ ...profileData, id: userId, avatar_url }, { onConflict: ['id'] });
-
-    if (upsertError) {
-      throw new Error(upsertError.message);
-    }
-
-    return { ...profileData, id: userId, avatar_url };
   } catch (error) {
     return rejectWithValue(error.message);
   }
@@ -77,7 +213,12 @@ const authSlice = createSlice({
     profile: null,
     loading: false,
     error: null,
-    viewModal:false
+    viewModal:false,
+    messagesSubscription: null,
+    channelsSubscription: null,
+    channels: [],
+    currentChannel:null
+
   },
   reducers: {
     logout(state) {
@@ -88,6 +229,14 @@ const authSlice = createSlice({
     },
     setModalView(state,payload){
         state.viewModal = payload.payload;
+    },
+    addChannel: (state, action) => {
+      state.channels.push(action?.payload);
+    },
+    setUsersCurrentChanel:(state, action)=>{
+      console.log('payload',action.payload)
+      state.currentChannel = action.payload
+
     }
 
 
@@ -129,9 +278,39 @@ const authSlice = createSlice({
       .addCase(createProfile.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      });
+      })
+      .addCase(SubscribetoChannels.fulfilled, (state, action) => {
+        state.channelsSubscription = action.payload;
+      })
+      .addCase(SubscribetoChannels.rejected, (state, action) => {
+        state.error = action.payload;
+      })
+      .addCase(unsubscribeFromChannels.fulfilled, (state) => {
+        state.channelsSubscription = null;
+      })
+      .addCase(unsubscribeFromChannels.rejected, (state, action) => {
+        state.error = action.payload;
+      })
+      .addCase(subscribeToMessages.fulfilled, (state, action) => {
+        state.messagesSubscription = action.payload;
+      })
+      .addCase(subscribeToMessages.rejected, (state, action) => {
+        state.error = action.payload;
+      })
+      .addCase(unsubscribeFromMessages.fulfilled, (state) => {
+        state.messagesSubscription = null;
+      })
+      .addCase(unsubscribeFromMessages.rejected, (state, action) => {
+        state.error = action.payload;
+      })
+      .addCase(fetchInitialChannels.fulfilled, (state, action) => {
+        state.channels = action.payload;
+      })
+      .addCase(fetchInitialChannels.rejected, (state, action) => {
+        state.error = action.payload;
+      })
   },
 });
 
-export const { logout,setModalView } = authSlice.actions;
+export const { logout,setModalView, addChannel,setUsersCurrentChanel} = authSlice.actions;
 export default authSlice.reducer;

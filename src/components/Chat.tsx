@@ -24,7 +24,7 @@ function ChatComp() {
   }
 
   return (
-    <Layout style={{ height: '70vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <Layout style={{  display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
       <Content style={{ maxWidth: '600px', paddingBottom: '20px', width: '100%' }}>
         <Card
           style={{ backgroundColor: 'white', borderRadius: '10px', height, overflow: 'auto' }}
