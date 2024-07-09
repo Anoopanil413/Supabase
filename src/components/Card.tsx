@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import  { ReactNode } from 'react';
 import { Card, Button } from 'antd';
 
 const { Meta } = Card;
