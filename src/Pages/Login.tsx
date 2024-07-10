@@ -36,7 +36,7 @@ const Login = () => {
       const {useremail,password} = datas
 
       const data = await signinFun(useremail,password)
-      if(data){
+      if(data?.session && data?.user){
         sessionStorage.setItem("token",JSON.stringify(data) );
         const session = await supabase.auth.getSession();
         const userId = session.data.session?.user.id;
@@ -47,7 +47,8 @@ const Login = () => {
         }
         navigate("/");
       }else {
-        console.log('Error during sign-in:', data);
+        navigate("/signup");
+
       }
     } catch (error) {
       console.log(error)

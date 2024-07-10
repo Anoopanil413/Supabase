@@ -65,3 +65,71 @@
 .custom-label{
   color: bisque;
 }
+
+
+.message-box {
+  max-height: 400px;
+  overflow-y: auto;
+  border-radius: 8px;
+  background-color: #c5c4c2; /* assuming your background color */
+  padding: 10px;
+}
+
+.my-message, .other-message {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.my-message .ant-list-item-meta,
+.other-message .ant-list-item-meta {
+  display: flex;
+  align-items: center;
+  max-width: 60%;
+  background: rgb(218, 216, 216);
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.my-message {
+  justify-content: flex-start;
+}
+
+.other-message {
+  justify-content: flex-end;
+}
+
+.my-message .ant-list-item-meta-title,
+.other-message .ant-list-item-meta-title {
+  font-weight: bold;
+}
+
+
+
+.my-message .ant-list-item-meta-description,
+.other-message .ant-list-item-meta-description {
+  margin: 0;
+}
+
+.timestamp {
+  font-size: 0.8em;
+  color: gray;
+  display: block;
+  text-align: right;
+  margin-top: 5px;
+}
+
+
+
+.other-message .ant-list-item-meta-avatar{
+  margin-left: 0.8rem;
+  order: 2;
+}
+
+.other-message .ant-list-item-meta-title,
+.other-message .ant-list-item-meta-description{
+  text-align: right;
+}
+
+.other-message .ant-list-item-meta-description .timestamp{
+text-align: left;
+}

@@ -9,7 +9,7 @@ import {
 import { Button, Layout, Menu, theme } from 'antd';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { Avatar, Badge, Space } from 'antd';
-import { setModalView } from '../features/userSlice';
+import { logout, setModalView } from '../features/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
 const { Header, Sider, Content } = Layout;
@@ -54,8 +54,20 @@ const Layouts: React.FC = () => {
             {
               key: '3',
               icon: <UploadOutlined />,
-              label: 'nav 3',
+              label: 'Logout',
+              onClick:()=>{
+                dispatch(logout())
+                navigate('/signin')
+              }
+
             },
+            {
+              key:'4',
+              icon:<UserOutlined />,
+              label:'Pdf',
+              onClick:()=>navigate('/pdf')
+
+            }
           ]}
         />
       </Sider>
@@ -74,7 +86,6 @@ const Layouts: React.FC = () => {
 
 <Badge dot>
       <Avatar shape="square" icon={<UserOutlined />} onClick={()=>{
-        console.log("clickimng",modalView)
         setModalsView(!modalView)
         dispatch(setModalView(modalView))}}/>
     </Badge>

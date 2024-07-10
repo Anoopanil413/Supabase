@@ -1,81 +1,70 @@
-import React from 'react';
-import { Alert, Button, Spin, Typography } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Alert, Avatar, Button, Card, List, Spin, Typography } from 'antd';
 // import { useAppContext } from '../context/appContext';
 import Message from './Message';
+import { useSelector } from 'react-redux';
+import moment from 'moment';
 
 const { Text } = Typography;
 
 export default function Messages() {
 //   const { username, loadingInitial, error, getMessagesAndSubscribe, messages } = useAppContext();
-const messages = [{
-    id:'1',
-    text:"hello",
-    is_authenticated:true,
-
-},{
-    id:'2',
-    text:"hello",
-    is_authenticated:true,
-        username:'boommmfmf'
-},{
-    id:'3',
-    text:"hello",
-    is_authenticated:true,
-      username:'boommm'
-},{
-    id:'4',
-    text:"hello",
-    is_authenticated:true,
-      username:'mmmfmf'
-}]
+const {channelMessagesOnSubscription,currentChannel,profile} = useSelector((state:any)=>state.users);
 
 
-const username =  'mmmfmf'
 
 
-  const reversed = [...messages].reverse();
 
-//   if (loadingInitial) {
-//     return (
-//       <div style={{ textAlign: 'center' }}>
-//         <Spin />
-//       </div>
-//     );
-//   }
 
-//   if (error) {
-//     return (
-//       <Alert
-//         message="Error"
-//         description={
-//           <div>
-//             {error}
-//             <Button
-//               type="link"
-//               onClick={getMessagesAndSubscribe}
-//               style={{ marginLeft: '5px' }}
-//             >
-//               try to reconnect
-//             </Button>
-//           </div>
-//         }
-//         type="error"
-//         showIcon
-//         style={{ marginTop: '20px' }}
-//       />
-//     );
-//   }
 
-  if (!messages.length) {
-    return (
-      <div style={{ textAlign: 'center' }}>
-        <Text >No messages 😞</Text>
-      </div>
-    );
+  return (
+    <>
+    {/* {
+      channelMessagesOnSubscription[currentChannel] && channelMessagesOnSubscription[currentChannel].messages.length > 0 && channelMessagesOnSubscription[currentChannel].messages.map((m:any)=>{
+        console.log("cheking messaeg sin componenet",m)
+
+        return(
+          <>
+          <div>
+            {m.messages}
+          </div>
+          
+          </>
+        )
+      })
+    } */}
+
+
+{channelMessagesOnSubscription[currentChannel] && channelMessagesOnSubscription[currentChannel].messages.length > 0 ?(
+    <List
+      itemLayout="horizontal"
+      dataSource={channelMessagesOnSubscription[currentChannel].messages}
+      renderItem={(message:any) => (
+        <List.Item className={message.user.id === profile.id ? 'my-message' : 'other-message'}>
+          <List.Item.Meta
+            avatar={<Avatar src={message.user.avatar_url} />}
+            title={<span>{message.user.id === profile.id ? "You" : message.user.username}</span>}
+            description={
+              <div>
+                <p style={{ color: 'black' }}>{message.messages}</p>
+                <span className="timestamp">{moment(message.timestamp).format('hh:mm A')}</span>
+              </div>
+            }
+          />
+        </List.Item>
+      )}
+    />
+
+
+
+):(
+  <>
+  <p>No messages yet</p>
+  
+  </>
+)
+    
   }
-
-  return reversed.map((message) => {
-    const isYou = message.username === username;
-    return <Message key={message.id} message={message} isYou={isYou} />;
-  });
+    </>
+  )
 }

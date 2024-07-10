@@ -1,17 +1,22 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { subscribeToMessages, unsubscribeFromMessages } from '../features/userSlice';
+import { addMessageToChannel, setChannelOnSubscriptionForMsgs, subscribeToMessages, unsubscribeFromMessages } from '../features/userSlice';
 // import { subscribeToMessages, unsubscribeFromMessages } from ''; // Ensure to replace with the actual file name
 
-const useMessageSubscription = (channelName:string, messageReceivedCallback:any) => {
+const useMessageSubscription = (channeldat:any, messageReceivedCallback:any) => {
   const dispatch = useDispatch();
-  const { messagesSubscription,channelsSubscription } = useSelector((state:any) => state.users);
+  const { messagesSubscription } = useSelector((state:any) => state.users);
+
+  const {currentChannel:channelName,user} = channeldat
 
   useEffect(() => {
-    dispatch(subscribeToMessages(channelName));
-
+    dispatch(subscribeToMessages(channeldat));
+    dispatch(setChannelOnSubscriptionForMsgs({ channelName: channelName}));
     return () => {
-      dispatch(unsubscribeFromMessages());
+      dispatch(unsubscribeFromMessages(channeldat));
+      // if(messagesSubscription.unsubscribeFromChannel){
+      //   messagesSubscription.unsubscribeFromChannel()
+      // }
     };
   }, [dispatch, channelName]);
 
@@ -21,13 +26,24 @@ const useMessageSubscription = (channelName:string, messageReceivedCallback:any)
     }
   }, [messagesSubscription, messageReceivedCallback]);
 
-  const sendMessage = (message:string) => {
+  const sendMessage = (message:any) => {
     if (messagesSubscription?.sendMessage) {
+      
       messagesSubscription.sendMessage(message);
+
+      dispatch(addMessageToChannel(message))
     }
   };
 
-  return sendMessage;
+  const unSubscribeFromChannel = ()=>{
+    console.log("unsubscribing from channel")
+    if(messagesSubscription.unsubscribeFromChannel){
+      messagesSubscription.unsubscribeFromChannel()
+
+    }
+  }
+
+  return {sendMessage,unSubscribeFromChannel};
 };
 
 export default useMessageSubscription;

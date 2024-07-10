@@ -122,8 +122,7 @@ const CreateChannel = () => {
 
 
   const handleJoinChannel = (chanl:any)=>{
-    console.log("getting the click event",chanl.name)
-    dispatch(setUsersCurrentChanel(chanl.name))
+    dispatch(setUsersCurrentChanel(chanl.id))
     navigate('chat')
   }
 

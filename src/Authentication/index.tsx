@@ -9,6 +9,7 @@ import {
   import Signup from "../Pages/Signup";
 import Protected from "./protected";
 import Chat from "../Pages/Chat";
+import Pdfviewer from "../Pages/Pdfviewer";
 
 
 
@@ -18,6 +19,7 @@ import Chat from "../Pages/Chat";
         <Route element={<Protected />}>
           <Route index  element={<Home />} />
           <Route path="chat" element={<Chat/>}/>
+          <Route path="pdf" element={<Pdfviewer/>}/>
         </Route>
         <Route path="signin" element={<Signin />} />
         <Route path="signup" element={<Signup />} />

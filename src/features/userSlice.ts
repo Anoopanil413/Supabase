@@ -35,7 +35,7 @@ export const fetchInitialChannels:any = createAsyncThunk(
       }
 
       return data;
-    } catch (error) {
+    } catch (error:any) {
       return rejectWithValue(error.message);
     }
   }
@@ -82,7 +82,8 @@ export const unsubscribeFromChannels:any = createAsyncThunk(
 );
 export const subscribeToMessages:any = createAsyncThunk(
   'users/subscribeMessages',
-  async (channelName:string, { rejectWithValue }) => {
+  async (channelDat:any, { rejectWithValue }) => {
+    const {currentChannel:channelName,user} = channelDat
     const myChannel = supabase.channel(channelName, {
       config: {
         broadcast: { ack: true },
@@ -94,13 +95,18 @@ export const subscribeToMessages:any = createAsyncThunk(
         return false;
       }
 
+      const userdat = {
+        id:user.id,
+        username:user.username
+      }
       const serverResponse = await myChannel.send({
         type: 'broadcast',
         event: 'acknowledge',
-        payload: {},
+        payload: {userdat},
       });
 
-      console.log('serverResponse', serverResponse);
+
+console.log("sunscribed",serverResponse,channelName)
 
       return true;
     });
@@ -123,14 +129,26 @@ export const subscribeToMessages:any = createAsyncThunk(
       });
     };
 
-    return { broadcastChannel, sendMessage, listenMessages };
+    const unsubscribeFromChannel = async()=>{
+      const server = await myChannel.unsubscribe()
+
+      console.log("Unsubscribed",server)
+
+
+    }
+
+
+    return { broadcastChannel, sendMessage, listenMessages ,unsubscribeFromChannel};
   }
 );
 
 export const unsubscribeFromMessages:any = createAsyncThunk(
   'users/unsubscribeMessages',
-  async (_, { rejectWithValue }) => {
-    const val = await supabase.channel('message_broadcast').unsubscribe();
+  async (channelDat, { rejectWithValue }) => {
+    const {currentChannel} = channelDat
+
+    const val = await supabase.channel(currentChannel).unsubscribe();
+    console.log("chan dat",val,currentChannel)
 
     if (val == 'error') {
       return rejectWithValue('Failed to unsubscribe from messages channel');
@@ -202,7 +220,7 @@ export const createProfile:any = createAsyncThunk('users/createProfile', async (
       return { ...profileData, id: userId, avatar_url };
     }
 
-  } catch (error) {
+  } catch (error:any) {
     return rejectWithValue(error.message);
   }
 });
@@ -217,9 +235,9 @@ const authSlice = createSlice({
     messagesSubscription: null,
     channelsSubscription: null,
     channels: [],
-    currentChannel:null
-
-  },
+    currentChannel:null,
+    channelMessagesOnSubscription: {}
+    },
   reducers: {
     logout(state) {
       state.user = null;
@@ -234,10 +252,28 @@ const authSlice = createSlice({
       state.channels.push(action?.payload);
     },
     setUsersCurrentChanel:(state, action)=>{
-      console.log('payload',action.payload)
       state.currentChannel = action.payload
+    },
+    setChannelOnSubscriptionForMsgs: (state, action) => {
+      const { channelName } = action.payload;
+      if (!state.channelMessagesOnSubscription[channelName]) {
 
-    }
+        state.channelMessagesOnSubscription[channelName] = { messages: [] };
+      }
+    },
+    addMessageToChannel: (state, action) => {
+      const { channelName, message:newMsg,user,date} = action.payload;
+      if (state.channelMessagesOnSubscription[channelName]) {
+
+        const message = {
+          messages:newMsg,
+          user,
+          date
+
+        }
+        state.channelMessagesOnSubscription[channelName].messages.push(message);
+      }
+    },
 
 
   },
@@ -312,5 +348,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout,setModalView, addChannel,setUsersCurrentChanel} = authSlice.actions;
+export const { logout,setModalView, addChannel,setUsersCurrentChanel,setChannelOnSubscriptionForMsgs,addMessageToChannel} = authSlice.actions;
 export default authSlice.reducer;
