@@ -17,21 +17,21 @@ const Home = () => {
   
 
 
-  useEffect(()=>{
-    if(!users.profile && !users.viewModal){
-      dispatch(setModalView(true))
-    }else if(users.user){
-      dispatch(setModalView(false))
+  // useEffect(()=>{
+  //   if(!users.profile && !users.viewModal){
+  //     dispatch(setModalView(true))
+  //   }else if(users.user){
+  //     dispatch(setModalView(false))
 
-    }
-  },[users?.user])
+  //   }
+  // },[])
   
 
 
 
   return (
     <>
-      {users.viewModal && <UserProfileModal/>}
+      {users.viewModal === true && <UserProfileModal/>}
       <CreateChannel/>
 
 

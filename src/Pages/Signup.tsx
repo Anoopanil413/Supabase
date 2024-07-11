@@ -2,8 +2,10 @@
 import { useNavigate } from "react-router-dom";
 import FunForm from "../components/FunForm";
 import supabase from "../supabase";
+import { Auth } from "@supabase/auth-ui-react";
 // import { Auth } from "@supabase/auth-ui-react";
-// import { ThemeSupa } from "@supabase/auth-ui-shared";
+// import { Auth } from "@supabase/auth-ui-react";
+import { ThemeSupa } from "@supabase/auth-ui-shared";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -58,10 +60,31 @@ const SignUp = () => {
           flexDirection: "column",
         }}
       >
-        <div>Signup</div>
-        <div className="LoginPage">
+    <div style={{textAlign:'center'}}><p style={{fontSize:'20px'}}>Signup</p></div>
+      <div className="LoginPage">
           <FunForm handleSubmit={handleSignupSubmit} />
         </div>
+
+        <div className="custon_google">
+        <Auth
+          supabaseClient={supabase}
+          appearance={{ theme: ThemeSupa }}
+          providers={["google"]}
+        />
+      </div>
+        {/* <div
+      style={{
+        width: "100vw",
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+
+
+    </div> */}
+        <div><p>Already have an account?  <span ><a href="/signin">Signin</a></span></p></div>
       </div>
 
       {/* { !session ?

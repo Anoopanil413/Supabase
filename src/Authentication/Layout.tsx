@@ -86,8 +86,8 @@ const Layouts: React.FC = () => {
 
 <Badge dot>
       <Avatar shape="square" icon={<UserOutlined />} onClick={()=>{
-        setModalsView(!modalView)
-        dispatch(setModalView(modalView))}}/>
+        dispatch(setModalView(!viewModal.viewModal))
+        }}/>
     </Badge>
 
         </Header>

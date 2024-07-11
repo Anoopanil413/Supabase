@@ -8,20 +8,37 @@ import supabase from "../supabase";
 const Protected = () => {
   const dispatch = useDispatch()
   const token = sessionStorage.getItem("token");
-  const prof  =useSelector((state:any)=>state.users)
+
+  let session = null
+
 
   useEffect(()=>{
-    if(token){
-     (async()=>{
-      const session = await supabase.auth.getSession();
-      const userId = session.data.session?.user.id;
-      dispatch(fetchProfile(userId));
-     } )()
+
+
+    const checkSession = async () => {
+      try {
+        const session = await supabase.auth.getSession();
+        console.log("seesion",session)
+
+        if (session?.data) {
+          const userId = session.data.session?.user.id;
+          await dispatch(fetchProfile(userId));
+        }
+      } catch (error:any) {
+        console.error("Error fetching session:", error.message);
+      }
+    };
+
+    if (token) {
+      checkSession();
     }
 
-  },[])
+  },[dispatch, token,session])
 
-  return token ? <Layouts /> : <Navigate to="/signin" />;
+  return (token||session) ? <Layouts /> : <Navigate to="/signin" />;
 };
 
 export default Protected;
+
+
+

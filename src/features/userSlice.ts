@@ -236,7 +236,8 @@ const authSlice = createSlice({
     channelsSubscription: null,
     channels: [],
     currentChannel:null,
-    channelMessagesOnSubscription: {}
+    channelMessagesOnSubscription: {},
+    currentChannelname:null
     },
   reducers: {
     logout(state) {
@@ -253,6 +254,9 @@ const authSlice = createSlice({
     },
     setUsersCurrentChanel:(state, action)=>{
       state.currentChannel = action.payload
+    },
+    setCurrentChannelName:(state,action)=>{
+      state.currentChannelname = action.payload
     },
     setChannelOnSubscriptionForMsgs: (state, action) => {
       const { channelName } = action.payload;
@@ -348,5 +352,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout,setModalView, addChannel,setUsersCurrentChanel,setChannelOnSubscriptionForMsgs,addMessageToChannel} = authSlice.actions;
+export const { logout,setModalView, addChannel,setUsersCurrentChanel,setChannelOnSubscriptionForMsgs,addMessageToChannel,setCurrentChannelName} = authSlice.actions;
 export default authSlice.reducer;

@@ -6,6 +6,8 @@ import { UploadOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchInitialChannels,
+  setCurrentChannelName,
+  setModalView,
   setUsersCurrentChanel,
   SubscribetoChannels,
   unsubscribeFromChannels,
@@ -17,7 +19,7 @@ const CreateChannel = () => {
   const [channelName, setChannelName] = useState("");
   const [description, setDescription] = useState("");
   const [fileList, setFileList] = useState([]);
-  const { channelsSubscription, error, channels } = useSelector(
+  const { channelsSubscription, error, channels,profile } = useSelector(
     (state: any) => state.users
   );
   const dispatch = useDispatch();
@@ -72,6 +74,11 @@ const CreateChannel = () => {
   const createChannel = async (event: any) => {
     event.preventDefault;
 
+    if(!profile){
+      dispatch(setModalView(true)) 
+      return
+    }
+
     if (fileList) {
       const images = fileList.length ? fileList[0]?.originFileObj : null;
 
@@ -122,8 +129,15 @@ const CreateChannel = () => {
 
 
   const handleJoinChannel = (chanl:any)=>{
-    dispatch(setUsersCurrentChanel(chanl.id))
-    navigate('chat')
+    if(profile){
+      console.log("chaqnnel name",chanl)
+      dispatch(setUsersCurrentChanel(chanl.id))
+      dispatch(setCurrentChannelName(chanl.name))
+      navigate('chat')
+    }else{
+      setModalView(true)
+    }
+
   }
 
   return (
@@ -200,7 +214,7 @@ const CreateChannel = () => {
             {channels.map((chanl: any) => {
               return (
                 <Fragment key={chanl.id} >
-                    <div onClick={()=>handleJoinChannel(chanl)}>
+                    <div onClick={()=>handleJoinChannel(chanl)} style={{maxWidth:'120px'}}>
 
                   <ReusableCard
                     title={chanl?.name}

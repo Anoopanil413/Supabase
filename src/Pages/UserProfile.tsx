@@ -20,7 +20,7 @@ const UserProfileModal = () => {
   const [fileList, setFileList] = useState([]);
 
   const showModal = () => {
-    setVisible(true);
+    setVisible(viewSlice.viewModal);
     setEditMode(profile ? true : false);
     form.setFieldsValue({
       username: profile?.username,
