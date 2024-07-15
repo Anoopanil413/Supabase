@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Badge, Button, Card, Drawer, Layout } from 'antd';
+import { Avatar, Badge, Button, Card, Drawer, Layout, Tooltip,  } from 'antd';
 // import { useAppContext } from '../context/appContext';
 import Messages from './Messages';
 import { BsChevronDoubleDown } from 'react-icons/bs';
@@ -8,17 +8,22 @@ import { unsubscribeFromMessages } from '../features/userSlice';
 import { useNavigate } from 'react-router-dom';
 import useMessageSubscription from '../utils/messagesHook';
 import chatbg from '../../public/chatbg.jpg'
+import { Header } from 'antd/es/layout/layout';
+
+import avtrbg from '../../public/avatar.jpg'
+import Title from 'antd/es/typography/Title';
+import Paragraph from 'antd/es/typography/Paragraph';
 
 const { Content } = Layout;
 
 function ChatComp() {
-  const [height, setHeight] = useState(window.innerHeight - 205);
+  const [height, setHeight] = useState(window.innerHeight - 400);
 //   const { scrollRef, onScroll, scrollToBottom, isOnBottom, unviewedMessageCount } = useAppContext();
 const [open, setOpen] = useState(false);
 const dispatch = useDispatch();
 const navigate = useNavigate();
 
-const {currentChannel,profile,channelMessagesOnSubscription} = useSelector((state)=>state.users)
+const {currentChannel,profile,channelMessagesOnSubscription,currentChannelname,channels} = useSelector((state:any)=>state.users)
 
 
 const messagesEndRef = useRef(null);
@@ -42,11 +47,25 @@ const messagesEndRef = useRef(null);
   }, [channelMessagesOnSubscription[currentChannel]]);
   
   // const unviewedMessageCount = 1
-  const isOnBottom = false
+  const isOnBottom = false;
+
+  const chanlDat = channels.filter((chanl:any)=>chanl.id ===currentChannel )
+
 
   const scrollToBottom = ()=>{
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }
 
+  function truncateText(desc:string, maxLength=25) {
+    let descrip = new String(desc)
+    if (descrip.length > maxLength) {
+        descrip = descrip.slice(0, maxLength) + '...';
+    }
+    return (
+        <Tooltip title={desc}>
+        <div>{descrip}</div>
+      </Tooltip>
+    );
   }
 
 
@@ -54,6 +73,14 @@ const messagesEndRef = useRef(null);
     <Layout style={{  display: 'flex', justifyContent: 'center', alignItems: 'center', padding:'1rem' }}>
 
       <Content style={{ maxWidth: '600px', paddingBottom: '20px', width: '100%' }}>
+
+              <Header style={{ backgroundColor: '#deddc5', display: 'flex', alignItems: 'center', borderTopLeftRadius:'1rem',borderTopRightRadius:'1rem'  }}>
+        <Avatar src={chanlDat[0]?.images ?? avtrbg} size="large" style={{ marginRight: 16 }} />
+        <div>
+          <Title level={4} style={{ margin: 0 }}>{chanlDat[0]?.name}</Title>
+          <Paragraph style={{ margin: 0 }}>{truncateText(chanlDat[0]?.description)}</Paragraph>
+        </div>
+      </Header>
 
 
 

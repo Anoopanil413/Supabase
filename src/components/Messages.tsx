@@ -43,10 +43,20 @@ const {channelMessagesOnSubscription,currentChannel,profile} = useSelector((stat
         <List.Item className={message.user.id === profile.id ? 'my-message' : 'other-message'}>
           <List.Item.Meta
             avatar={<Avatar src={message.user.avatar_url} />}
-            title={<span>{message.user.id === profile.id ? "You" : message.user.username}</span>}
+            title={<span style={{fontFamily:'fantasy' }}>{message.user.id === profile.id ? "You" : message.user.username}</span>}
             description={
               <div>
-                <p style={{ color: 'black' }}>{message.messages}</p>
+
+                         {message.image && (
+              <img
+                src={message.image}
+                alt="Attached"
+                style={{ maxWidth: '50%', marginTop: '10px' }}
+                
+              />
+            )}
+                <p style={{ color: 'black',fontFamily:'monospace', fontWeight:'bold' }}>{message.messages}</p>
+
                 <span className="timestamp">{moment(message.timestamp).format('hh:mm A')}</span>
               </div>
             }

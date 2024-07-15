@@ -27,6 +27,7 @@ const useMessageSubscription = (channeldat:any, messageReceivedCallback:any) => 
   }, [messagesSubscription, messageReceivedCallback]);
 
   const sendMessage = (message:any) => {
+    console.log("message contenet inside the hook",message)
     if (messagesSubscription?.sendMessage) {
       
       messagesSubscription.sendMessage(message);

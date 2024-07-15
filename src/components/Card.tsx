@@ -27,7 +27,7 @@ const ReusableCard = ({
 
   let descrip = null 
 
-  function truncateText(desc, maxLength=30) {
+  function truncateText(desc:string, maxLength=30) {
     if (desc.length > maxLength) {
       return desc.slice(0, maxLength) + '...';
     }

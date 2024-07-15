@@ -15,7 +15,7 @@ function App() {
     <>
     <Provider store={store}>
     <Routes/>
-    </Provider>,
+    </Provider>
 
     </>
   )

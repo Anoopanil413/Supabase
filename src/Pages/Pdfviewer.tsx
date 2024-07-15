@@ -7,20 +7,47 @@ import pdf from '../../public/pdf/freee.pdf'
 
 const Pdfviewer = () => {
     const viewer = useRef(null);
+
     useEffect(() => {
         WebViewer(
           {
             path: '/webviewer/public',
             licenseKey: '1720615244809:7f9dd2f103000000001576ad29aba6aaaff49a8b06f5079a9c4f51def3',
             initialDoc: '/public/pdf/freee.pdf',
+
+            disabledElements: [
+              "header",
+              "annotationStylePopup",
+              "annotationDeleteButton",
+              "toolsOverlay",
+              "searchOverlay",
+              "toolbarGroup-Shapes",
+              "toolbarGroup-Edit",
+              "toolbarGroup-Insert",
+              "linkButton",
+              "menuOverlay",
+              "toolsHeader",
+              "pageNavOverlay",
+              "redoButton",
+              "undoButton",
+          ], 
+          fullAPI: true,
+          
+
           },
-          viewer.current,
+          viewer.current ,
         ).then((instance) => {
-            const { documentViewer, annotationManager, Annotations, } = instance.Core;
+          // const { disableFeatures, Feature, setMaxZoomLevel } = this.WebViewer.UI;
+
+          const {disableFeatures,Feature,setMaxZoomLevel} = instance.UI
+          
+
+            const { documentViewer, annotationManager, Annotations,  } = instance.Core;
+            disableFeatures([Feature.Annotations, Feature.Copy]);
 
             documentViewer.addEventListener('documentLoaded', () => {
               const rectangleAnnot = new Annotations.RectangleAnnotation({
-                PageNumber: 2,
+                PageNumber: 1,
                 X: 100,
                 Y: 150,
                 Width: 200,
@@ -33,7 +60,6 @@ const Pdfviewer = () => {
               // need to draw the annotation otherwise it won't show up until the page is refreshed
               annotationManager.redrawAnnotation(rectangleAnnot);
 
-              console.log("changing annotation manager",annotationManager)
             });
           });
       }, []);
@@ -50,3 +76,6 @@ const Pdfviewer = () => {
 }
 
 export default Pdfviewer
+
+
+

@@ -9,7 +9,7 @@ const Chat = () => {
   return (
 
     <>
-          {users.viewModal && <UserProfileModal/>}
+    {users.viewModal && <UserProfileModal/>}
     <Chatui/>
     </>
 

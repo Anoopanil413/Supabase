@@ -3,10 +3,11 @@ import ChatComp from '../components/Chat'
 import useMessageSubscription from '../utils/messagesHook';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { Button, Drawer, Flex, Input, Layout, Space } from 'antd';
-import { Content } from 'antd/es/layout/layout';
-import { addMessageToChannel, unsubscribeFromChannels, unsubscribeFromMessages } from '../features/userSlice';
-import { MenuFoldOutlined } from '@ant-design/icons';
+import { Button, Drawer, Flex, Input, Layout, Menu, Space, Upload } from 'antd';
+import { Content, Header } from 'antd/es/layout/layout';
+import { addMessageToChannel, removeChannelDataonExit, unsubscribeFromChannels, unsubscribeFromMessages } from '../features/userSlice';
+import { MenuFoldOutlined, PaperClipOutlined } from '@ant-design/icons';
+import ChatInput from '../components/chatInput';
 
 const Chatui = () => {
 
@@ -17,9 +18,10 @@ const {currentChannel,profile,channelMessagesOnSubscription,currentChannelname} 
         navigate('/')
     }
 
-    const [message,setMessage] = useState('')
 
     const [open, setOpen] = useState(false);
+
+
 
 
 
@@ -38,40 +40,63 @@ const {currentChannel,profile,channelMessagesOnSubscription,currentChannelname} 
     const {sendMessage} = useMessageSubscription(channelData, messageReceived);
 
       
-      const handleSendMessage = () => {
-        const messages= {
-          channelName:currentChannel,
-          message:message,
-          user:profile,
-          date: Date.now()
-        }
-        if(message && message.trim() !== '')sendMessage(messages);
-        setMessage('')
-      };
 
       const showDrawer = () => {
         setOpen(true);
       }; 
       
 
-const onClose = () => {
-  setOpen(false);
-};
-
+          const onClose = () => {
+            setOpen(false);
+          };
+          const encodeFileToBase64 = (file:any) => {
+            return new Promise((resolve, reject) => {
+              const reader = new FileReader();
+              reader.readAsDataURL(file);
+              reader.onload = () => resolve(reader.result);
+              reader.onerror = (error) => reject(error);
+            });
+          };
 
       const handleOnclick = ()=>{
 
         dispatch(unsubscribeFromMessages(channelData));
         unsubscribeFromChannels()
+        dispatch(removeChannelDataonExit(currentChannel))
         setOpen(false);
         navigate('/')
     
+      }
+
+
+      const handleSendMessages = async(msg:any,img?:any)=>{
+        let messages
+        if(img){
+          const encodedImg = await encodeFileToBase64(img)
+           messages= {
+            channelName:currentChannel,
+            message:msg,
+            user:profile,
+            image:encodedImg,
+            date: Date.now()
+          }
+        }else{
+          messages= {
+            channelName:currentChannel,
+            message:msg,
+            user:profile,
+            date: Date.now()
+          }
+        }
+        sendMessage(messages)
+
       }
 
     
 
   return (
     <>
+
 
     <ChatComp/>
     <Drawer title={currentChannelname} onClose={onClose} open={open}>
@@ -88,16 +113,8 @@ const onClose = () => {
     <Content style={{ maxWidth: '600px', paddingBottom: '20px', width: '100%' }}>
 
 
-      <Flex >
 
-      <Space.Compact style={{ width: '100%' }}>
-      <Input placeholder='Enter message' onChange={(e)=>setMessage(e.target.value)} value={message} />
-      <Button onClick={handleSendMessage} type="primary">Send</Button>
-      <Button type="text" style={{marginLeft:'0.4rem'}} onClick={showDrawer}>
-      <MenuFoldOutlined />
-      </Button>
-      </Space.Compact>
-      </Flex>
+      <ChatInput handleSendMessage={handleSendMessages} showDrawer={showDrawer}/> 
 
       </Content>
 

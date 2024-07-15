@@ -1,6 +1,6 @@
 import React, { Fragment, useCallback, useEffect, useState } from "react";
 import ReusableCard from "../components/Card";
-import { Button, Input, Upload } from "antd";
+import { Button, Input, Menu, MenuProps, Upload } from "antd";
 import Buttons from "../components/Button";
 import { UploadOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,6 +15,10 @@ import {
 import supabase from "../supabase";
 import imgs from '../../public/imgs.svg'
 import { useNavigate } from "react-router-dom";
+import ItemList from "../components/ListItems";
+import './commonPage.css'
+
+
 const CreateChannel = () => {
   const [channelName, setChannelName] = useState("");
   const [description, setDescription] = useState("");
@@ -127,10 +131,13 @@ const CreateChannel = () => {
     }
   };
 
+  const handleLeave = (item:any)=>{
+
+  }
+
 
   const handleJoinChannel = (chanl:any)=>{
     if(profile){
-      console.log("chaqnnel name",chanl)
       dispatch(setUsersCurrentChanel(chanl.id))
       dispatch(setCurrentChannelName(chanl.name))
       navigate('chat')
@@ -140,25 +147,35 @@ const CreateChannel = () => {
 
   }
 
+
   return (
     <>
-      <div style={{ maxWidth: "340px" }}>
+      <div  className='createChannelTemplate'  >
+        <div style={{width:'50%'}}>
+
+        <div style={{maxWidth:'340px', border:'solid 1px #d9d6ab', borderRadius:'0.5rem'}}>
         <ReusableCard title="Crerate Channel">
+          <label             style={{ margin: "0.7rem",fontWeight:'bold',marginTop:'0.8rem' }}
+          >Channel Name</label>
           <Input
             name="channelName"
             placeholder="Channel name"
             value={channelName}
             onChange={handleChange}
             style={{ margin: "0.7rem" }}
-          />
+            />
+            <label             style={{ margin: "0.7rem",fontWeight:'bold' }}
+            >Channel Description</label>
+
           <Input
             name="description"
             placeholder="Channel description"
             value={description}
             onChange={handleChange}
             style={{ margin: "0.7rem" }}
-          />
-
+            />
+          <label             style={{ margin: "0.7rem",fontWeight:'bold' }}
+          >Channel Logo</label>
           <Upload
             name="avatar"
             listType="picture-card"
@@ -167,9 +184,11 @@ const CreateChannel = () => {
             beforeUpload={beforeUpload}
             onChange={handleUploadChange}
             maxCount={1}
+            style={{ margin: "0.7rem" }}
+
           >
             {fileList.length < 1 && (
-              <div>
+              <div >
                 <UploadOutlined />
                 <div style={{ marginTop: 8 }}>Upload</div>
               </div>
@@ -182,18 +201,23 @@ const CreateChannel = () => {
           </div>
         </ReusableCard>
 
-        <div>
+        </div>
+            </div>
+        <div style={{width:'50%',padding:'1rem',height:'40vh', overflow:'hidden', scrollBehavior:'smooth'}}>
+          <div style={{textAlign:'center', fontWeight:'bolder', fontSize:'1rem'}}>Channels</div>
+
+          <div style={{display:'flex', justifyContent:'center', padding:'0 2rem', }}> 
+          <ItemList handleClickToJoin={handleJoinChannel} handleLeave={handleLeave} items={channels}/>
+            </div>
+
+        </div>
+
+
+        {/* <div>
+
+
+        <div >
           <h2>Channels</h2>
-          {channelsSubscription &&
-            channelsSubscription?.lenght > 0 &&
-            channelsSubscription?.map((channel: any) => (
-              <div
-                key={channel.id}
-                onClick={() => handleChannelClick(channel.name)}
-              >
-                {channel.name}
-              </div>
-            ))}
           {error && <p>Error: {error}</p>}
         </div>
  
@@ -214,7 +238,7 @@ const CreateChannel = () => {
             {channels.map((chanl: any) => {
               return (
                 <Fragment key={chanl.id} >
-                    <div onClick={()=>handleJoinChannel(chanl)} style={{maxWidth:'120px'}}>
+                    <div onClick={()=>handleJoinChannel(chanl)} >
 
                   <ReusableCard
                     title={chanl?.name}
@@ -230,6 +254,8 @@ const CreateChannel = () => {
             })}
           </div>
         )}
+                </div> */}
+
       </div>
     </>
   );

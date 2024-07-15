@@ -176,3 +176,10 @@ text-align: left;
   font-size: 18px;
   color: #db4437; /* Google red */
 }
+
+.Crate_Channel_class{
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+  
+}

@@ -116,6 +116,7 @@ console.log("sunscribed",serverResponse,channelName)
     }
 
     const sendMessage = (message:string) => {
+      console.log("inside slice I am getting the image as",message)
       myChannel.send({
         type: 'broadcast',
         event: 'message',
@@ -148,7 +149,6 @@ export const unsubscribeFromMessages:any = createAsyncThunk(
     const {currentChannel} = channelDat
 
     const val = await supabase.channel(currentChannel).unsubscribe();
-    console.log("chan dat",val,currentChannel)
 
     if (val == 'error') {
       return rejectWithValue('Failed to unsubscribe from messages channel');
@@ -249,7 +249,7 @@ const authSlice = createSlice({
     setModalView(state,payload){
         state.viewModal = payload.payload;
     },
-    addChannel: (state, action) => {
+    addChannel: (state:any, action) => {
       state.channels.push(action?.payload);
     },
     setUsersCurrentChanel:(state, action)=>{
@@ -258,26 +258,36 @@ const authSlice = createSlice({
     setCurrentChannelName:(state,action)=>{
       state.currentChannelname = action.payload
     },
-    setChannelOnSubscriptionForMsgs: (state, action) => {
+    setChannelOnSubscriptionForMsgs: (state:any, action) => {
       const { channelName } = action.payload;
       if (!state.channelMessagesOnSubscription[channelName]) {
 
         state.channelMessagesOnSubscription[channelName] = { messages: [] };
       }
     },
-    addMessageToChannel: (state, action) => {
-      const { channelName, message:newMsg,user,date} = action.payload;
+    addMessageToChannel: (state:any, action:any) => {
+      const { channelName, message:newMsg,user,date,image} = action.payload;
       if (state.channelMessagesOnSubscription[channelName]) {
 
         const message = {
           messages:newMsg,
           user,
-          date
+          date,
+          image:image
 
         }
         state.channelMessagesOnSubscription[channelName].messages.push(message);
       }
     },
+    removeChannelDataonExit:(state:any,action:any)=>{
+
+   
+
+      if (state.channelMessagesOnSubscription[action.payload]) {
+        delete state.channelMessagesOnSubscription[action.payload];
+      }
+
+    }
 
 
   },
@@ -352,5 +362,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout,setModalView, addChannel,setUsersCurrentChanel,setChannelOnSubscriptionForMsgs,addMessageToChannel,setCurrentChannelName} = authSlice.actions;
+export const { logout,setModalView, addChannel,setUsersCurrentChanel,setChannelOnSubscriptionForMsgs,addMessageToChannel,setCurrentChannelName,removeChannelDataonExit} = authSlice.actions;
 export default authSlice.reducer;
