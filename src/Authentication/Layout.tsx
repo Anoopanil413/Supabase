@@ -78,6 +78,12 @@ const Layouts: React.FC = () => {
               label: "Pdf",
               onClick: () => navigate("/pdf"),
             },
+            {
+              key: "5",
+              icon: <UserOutlined />,
+              label: "try",
+              onClick: () => navigate("/try"),
+            }
           ]}
         />
       </Sider>

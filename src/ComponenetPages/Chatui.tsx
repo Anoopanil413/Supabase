@@ -3,27 +3,27 @@ import ChatComp from '../components/Chat'
 import useMessageSubscription from '../utils/messagesHook';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { Button, Drawer, Flex, Input, Layout, Menu, Space, Upload } from 'antd';
+import { Avatar, Badge, Button, Drawer, Flex, Input, Layout, List, Menu, Space, Upload } from 'antd';
 import { Content, Header } from 'antd/es/layout/layout';
 import { addMessageToChannel, removeChannelDataonExit, unsubscribeFromChannels, unsubscribeFromMessages } from '../features/userSlice';
 import { MenuFoldOutlined, PaperClipOutlined } from '@ant-design/icons';
 import ChatInput from '../components/chatInput';
+import supabase from '../supabase';
 
 const Chatui = () => {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
-const {currentChannel,profile,channelMessagesOnSubscription,currentChannelname} = useSelector((state:any)=>state.users) ;
+const {currentChannel,profile,channelMessagesOnSubscription,currentChannelname,channels} = useSelector((state:any)=>state.users) ;
     if(!currentChannel){
         navigate('/')
     }
 
-
     const [open, setOpen] = useState(false);
 
+    const [onlineUsers, setOnlineUsers] = useState<{ id: any; username: any; avatar_url: any; }[]>([]);
 
-
-
+    const channelsData = channels.filter((chanl:any) => chanl.id == currentChannel);
 
 
 
@@ -61,7 +61,6 @@ const {currentChannel,profile,channelMessagesOnSubscription,currentChannelname} 
       const handleOnclick = ()=>{
 
         dispatch(unsubscribeFromMessages(channelData));
-        unsubscribeFromChannels()
         dispatch(removeChannelDataonExit(currentChannel))
         setOpen(false);
         navigate('/')
@@ -92,6 +91,71 @@ const {currentChannel,profile,channelMessagesOnSubscription,currentChannelname} 
 
       }
 
+
+
+      // useEffect(() => {
+      //   const fetchOnlineUsers = async () => {
+
+    
+      //       const usersOnline = channels.online_users || [];
+    
+      //       const { data: usersData, error: usersError } = await supabase
+      //         .from('users')
+      //         .select('id, name, avatar')
+      //         .in('id', usersOnline);
+    
+      //       if (usersError) {
+      //         console.error('Error fetching users:', usersError);
+      //       } else {
+      //       }
+      //     }
+      //   };
+    
+      //   fetchOnlineUsers();
+      // }, [channelName]);
+
+
+      useEffect(()=>{
+                const fetchOnlineUsers = async () => {
+
+                  
+
+    
+            const usersOnline = channelsData[0]?.online_users || [];
+
+
+            // usersOnline.forEach(async(element:any) => {
+            //   const { data: usersData, error: usersError } = await supabase
+            //   .from('profiles')
+            //   .select('id, username, avatar_url')
+            //   .in('id', usersOnline);
+
+            // if (usersError) {
+            //   console.error('Error fetching users:', usersError);
+            // } else {
+            // }
+            // });
+
+            const { data: usersData, error: usersError } = await supabase
+              .from('profiles')
+              .select('id, username, avatar_url')
+              .in('id', usersOnline);
+
+            if (usersError) {
+              console.error('Error fetching users:', usersError);
+            } else {
+
+              console.log("getting all athe users data",usersData)
+              setOnlineUsers(usersData)
+            }
+
+          }
+
+          fetchOnlineUsers()
+
+      
+      },[])
+
     
 
   return (
@@ -105,6 +169,22 @@ const {currentChannel,profile,channelMessagesOnSubscription,currentChannelname} 
         </Button>
 
         <div>
+        <List
+        itemLayout="horizontal"
+        dataSource={onlineUsers}
+        renderItem={user => (
+          <List.Item>
+            <List.Item.Meta
+              avatar={
+                <Badge dot status="success">
+                  <Avatar src={user.avatar_url} />
+                </Badge>
+              }
+              title={user?.username}
+            />
+          </List.Item>
+        )}
+      />
           
         </div>
      </Drawer>
