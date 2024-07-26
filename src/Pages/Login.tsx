@@ -76,7 +76,7 @@ const Login = () => {
   }
   return (
     <>
-    <div style={{display:'flex', justifyContent:'center',alignItems:'center',flexDirection:'column'}}>
+    <div style={{display:'flex', justifyContent:'center',alignItems:'center',flexDirection:'column',height:'100%',}}>
     <div style={{textAlign:'center'}}><p style={{fontSize:'20px'}}>Login</p></div>
     <div className='LoginPage'>
       <FunForm handleSubmit= {handleSignupSubmit}/>

@@ -34,7 +34,7 @@ const ItemList = ({ items,handleClickToJoin,handleLeave }:{items:any,handleClick
       style={{border:'solid 1px #d9d6ab', borderRadius:'1rem', maxHeight:'350px', backgroundColor:'#f5f4ed'}}
       
       renderItem={(item:any) => (
-        <List.Item style={{minWidth:'280px', margin:'0.4rem',padding:'0.5rem', backgroundColor:'#deddc5', borderRadius:'1rem'}}>
+        <List.Item style={{minWidth:'280px', margin:'0.4rem',padding:'0.5rem', backgroundColor:'#deddc5', borderRadius:'1rem'}} key={item.id}>
           <List.Item.Meta
           style={{display:'flex',alignItems:'center'}}
             avatar={<Avatar src={item?.images ?? chatbg} />}

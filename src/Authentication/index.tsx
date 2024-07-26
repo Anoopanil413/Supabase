@@ -11,6 +11,7 @@ import Protected from "./protected";
 import Chat from "../Pages/Chat";
 import Pdfviewer from "../Pages/Pdfviewer";
 import Try from "../Pages/Try";
+import VideoCall from "../Pages/videoCall";
 
 
 
@@ -22,6 +23,7 @@ import Try from "../Pages/Try";
           <Route path="chat" element={<Chat/>}/>
           <Route path="pdf" element={<Pdfviewer/>}/>
           <Route path="try" element={<Try/>}/>
+          <Route path="videoCall" element={<VideoCall/>}/>
         </Route>
         <Route path="signin" element={<Signin />} />
         <Route path="signup" element={<Signup />} />

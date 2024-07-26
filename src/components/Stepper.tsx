@@ -21,6 +21,7 @@ const Stepper = () => {
       <Steps
         direction="vertical"
         current={stepperState}
+        
         status="error"
         items={[
           {

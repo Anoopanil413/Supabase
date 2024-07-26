@@ -44,7 +44,7 @@ export const fetchInitialChannels:any = createAsyncThunk(
 
 export const SubscribetoChannels:any = createAsyncThunk(
   'users/subscribeChannels',
-  async (_, {dispatch, rejectWithValue }) => {
+  async (_, {dispatch,getState,rejectWithValue }) => {
     const channelSubscribed = await supabase
       .channel('channels_chain')
       .on(
@@ -55,6 +55,13 @@ export const SubscribetoChannels:any = createAsyncThunk(
           table: 'channels'
         },
         (payload) =>{
+
+          // const state:any = getState()
+          // console.log("old stat",state?.users)
+          // let newStatechng = state?.users.channels.filter((chan:any)=>chan.id != payload.new?.id) 
+
+          // console.log(newStatechng,   "NEW state",state?.users)
+
           dispatch(addChannel(payload.new));
         } 
       )
@@ -139,7 +146,6 @@ export const subscribeToMessages:any = createAsyncThunk(
     }
 
     const sendMessage = (message:string) => {
-      console.log("inside slice I am getting the image as",message)
       myChannel.send({
         type: 'broadcast',
         event: 'message',
@@ -155,7 +161,6 @@ export const subscribeToMessages:any = createAsyncThunk(
 
     const unsubscribeFromChannel = async()=>{
 
-      console.log("unsubscribing")
       const server = await myChannel.unsubscribe()
 
       const state:any = getState()
@@ -165,7 +170,6 @@ export const subscribeToMessages:any = createAsyncThunk(
         let users_online =[...currentChannel[0]?.online_users] || []
 
         users_online.filter((user)=>user != user.id );
-        console.log("chekingt he subscription",users_online)
 
         const { data, error: updateError } = await supabase
         .from('channels')
@@ -193,10 +197,8 @@ export const unsubscribeFromMessages:any = createAsyncThunk(
 
     const state:any = getState()
     if(currentChannel){
-      console.log("unsubscibing",state?.users.channels.filter((chanl:any)=>chanl.id == currentChannel ))
 
       const currentChanneldata = state?.users.channels.filter((chanl:any)=>chanl.id == currentChannel );
-      console.log("users online after unsub",currentChanneldata[0].online_users.includes(state.users.profile.id),state.users.profile.id)
   
       if(currentChanneldata[0].online_users.includes(state.users.profile.id)){
   
@@ -204,7 +206,6 @@ export const unsubscribeFromMessages:any = createAsyncThunk(
   
         const newUsersList =users_online.filter((user)=>user !== state.users.profile.id );
   
-        console.log("use5r update in unsubscribe",users_online)
         const { data, error: updateError } = await supabase
         .from('channels')
         .update({ online_users: newUsersList })
@@ -295,6 +296,9 @@ export const createProfile:any = createAsyncThunk('users/createProfile', async (
     return rejectWithValue(error.message);
   }
 });
+
+
+
 const authSlice = createSlice({
   name: 'users',
   initialState: {
@@ -321,6 +325,15 @@ const authSlice = createSlice({
         state.viewModal = payload.payload;
     },
     addChannel: (state:any, action) => {
+ 
+      let isChannelRegistered = state?.channels.some((element:any) => {
+        return element.id === action.payload.new?.id;
+      });
+
+      if(isChannelRegistered){
+        let newStatechng = state?.channels.filter((chan:any)=>chan.id != action.payload.new?.id) 
+        state.channels = newStatechng
+      }
       state.channels.push(action?.payload);
     },
     setUsersCurrentChanel:(state, action)=>{

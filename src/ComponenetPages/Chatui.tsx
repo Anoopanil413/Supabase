@@ -28,7 +28,7 @@ const {currentChannel,profile,channelMessagesOnSubscription,currentChannelname,c
 
 
     const messageReceived = useCallback((payload: any) => {
-      console.log("payload",payload)
+      // console.log("payload",payload)
         dispatch(addMessageToChannel(payload.payload.message))
 
       }, []);
@@ -145,7 +145,6 @@ const {currentChannel,profile,channelMessagesOnSubscription,currentChannelname,c
               console.error('Error fetching users:', usersError);
             } else {
 
-              console.log("getting all athe users data",usersData)
               setOnlineUsers(usersData)
             }
 

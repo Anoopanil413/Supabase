@@ -18,7 +18,6 @@ const Protected = () => {
     const checkSession = async () => {
       try {
         const session = await supabase.auth.getSession();
-        console.log("seesion",session)
 
         if (session?.data) {
           const userId = session.data.session?.user.id;

@@ -58,6 +58,7 @@ const SignUp = () => {
           justifyContent: "center",
           alignItems: "center",
           flexDirection: "column",
+          height:'100%',
         }}
       >
     <div style={{textAlign:'center'}}><p style={{fontSize:'20px'}}>Signup</p></div>

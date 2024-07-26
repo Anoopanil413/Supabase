@@ -1,81 +1,163 @@
-import React, { useEffect } from 'react'
-import {useRef} from 'react';
-import WebViewer from '@pdftron/webviewer'
-import pdf from '../../public/pdf/freee.pdf'
+import React, { useEffect, useState, useRef } from 'react';
+import WebViewer, { WebViewerInstance, } from '@pdftron/webviewer';
+import MovableToolbar from '../components/MovableToolbar';
+
+import  getInstance  from '@pdftron/webviewer'
+
+
+const Pdfviewer: React.FC = () => {
+  const viewer = useRef<HTMLDivElement>(null);
+  const [viewToolbar, setViewToolbar] = useState(false);
+  const [currentPdfInstance, setPdfInstance] = useState<WebViewerInstance | null>(null);
+  const [currentTool, setCurrentTool] = useState<string | null>(null);
+  
+
+  type ToolName = 'Edit' | 'AnnotationEdit' 
+
+  const onSelectTool = (tool: { name: ToolName }) => {
+
+
+    setCurrentTool(tool.name);
+
+    if (currentPdfInstance) {
+      const { Tools } = currentPdfInstance.Core;
+      // currentPdfInstance.
+      switch (tool.name) {
+        case 'Edit':
+          // currentPdfInstance.UI.setToolMode(Tools);
+          break;
+        case 'AnnotationEdit':
+          // currentPdfInstance.setToolMode(Tools.AnnotationEdit);
+          break;
+        // Add more cases for other tools
+        default:
+          // currentPdfInstance.UI.setToolMode(Tools.AnnotationEdit);
+      }
+    }
+  };
+  useEffect(()=>{
+    const InnerELement = viewer.current
+
+    // if(InnerELement){
+
+    //   // const elementDimension = InnerELement.querySelector("iframe").contentWindow.document;
+
+    //   console.log("elment with",elementDimension)
+    // }
 
 
 
-const Pdfviewer = () => {
-    const viewer = useRef(null);
+    if(currentPdfInstance){
+      console.log("currentTool",currentTool)
 
-    useEffect(() => {
-        WebViewer(
-          {
-            path: '/webviewer/public',
-            licenseKey: '1720615244809:7f9dd2f103000000001576ad29aba6aaaff49a8b06f5079a9c4f51def3',
-            initialDoc: '/public/pdf/freee.pdf',
 
-            disabledElements: [
-              "header",
-              "annotationStylePopup",
-              "annotationDeleteButton",
-              "toolsOverlay",
-              "searchOverlay",
-              "toolbarGroup-Shapes",
-              "toolbarGroup-Edit",
-              "toolbarGroup-Insert",
-              "linkButton",
-              "menuOverlay",
-              "toolsHeader",
-              "pageNavOverlay",
-              "redoButton",
-              "undoButton",
-          ], 
-          fullAPI: true,
-          
+      const { documentViewer, annotationManager } = currentPdfInstance.Core;
 
-          },
-          viewer.current ,
-        ).then((instance) => {
-          // const { disableFeatures, Feature, setMaxZoomLevel } = this.WebViewer.UI;
+      const handleMouseDown = (e:any) => {
+    
+        if (currentTool === 'Edit') {
 
-          const {disableFeatures,Feature,setMaxZoomLevel} = instance.UI
-          
+          const {  x, y } = e;
 
-            const { documentViewer, annotationManager, Annotations,  } = instance.Core;
-            disableFeatures([Feature.Annotations, Feature.Copy]);
+    
+          const annotation = new currentPdfInstance.Core.Annotations.RectangleAnnotation();
+          annotation.PageNumber = 1;
+          annotation.X = x;
+          annotation.Y = y;
+          annotation.Width = 140;
+          annotation.Height = 100;
+          annotationManager.addAnnotation(annotation);
+          annotationManager.redrawAnnotation(annotation);
+        }
+      }
 
-            documentViewer.addEventListener('documentLoaded', () => {
-              const rectangleAnnot = new Annotations.RectangleAnnotation({
-                PageNumber: 1,
-                X: 100,
-                Y: 150,
-                Width: 200,
-                Height: 50,
-                Author: annotationManager.getCurrentUser(),
-                
-              });
+      const handlemouseLeftUp =() => {
+        annotationManager.deselectAllAnnotations();
+      }
+    
       
-              annotationManager.addAnnotation(rectangleAnnot);
-              // need to draw the annotation otherwise it won't show up until the page is refreshed
-              annotationManager.redrawAnnotation(rectangleAnnot);
+      documentViewer.addEventListener('mouseLeftDown', handleMouseDown);
+      
+      documentViewer.addEventListener('mouseLeftUp', handlemouseLeftUp);
 
-            });
-          });
-      }, []);
+
+      // documentViewer.addEventListener('mouseMove', (e) => {
+      //   if(currentTool){
+      //     const annotations = annotationManager.getAnnotationsList();
+      //     const lastAnnotation = annotations[annotations.length - 1];
+      //     if (lastAnnotation && currentTool === 'Edit') {
+      //       const { pageNumber, x, y } = e;
+      //       lastAnnotation.Width = x - lastAnnotation.X;
+      //       lastAnnotation.Height = y - lastAnnotation.Y;
+      //       annotationManager.redrawAnnotation(lastAnnotation);
+      //     }
+      //   }
+   
+   
+      // });
+
+      return () => {
+        documentViewer.removeEventListener('mouseLeftDown', handleMouseDown);
+        documentViewer.removeEventListener('mouseLeftUp', handlemouseLeftUp);
+      };
+
+      
+    
+    }
+
+ 
+ 
+
+  },[currentTool,currentPdfInstance]) 
+
+  useEffect(() => {
+    WebViewer(
+      {
+        path: '/webviewer/public',
+        licenseKey: 'demo:1720615244809:7f9dd2f103000000001576ad29aba6aaaff49a8b06f5079a9c4f51def3',
+        initialDoc: '/public/pdf/freee.pdf',
+        disabledElements: [
+          "header",
+          "annotationStylePopup",
+          "annotationDeleteButton",
+          "toolsOverlay",
+          "searchOverlay",
+          "toolbarGroup-Shapes",
+          "toolbarGroup-Edit",
+          "toolbarGroup-Insert",
+          "linkButton",
+          "menuOverlay",
+          "toolsHeader",
+          "pageNavOverlay",
+          "redoButton",
+          "undoButton",
+        ],
+        fullAPI: true,
+      },
+      viewer.current as HTMLDivElement,
+    ).then((instance) => {
+      setViewToolbar(true);
+      setPdfInstance(instance);
+
+      // const { documentViewer, annotationManager } = instance.Core;
+
+      instance.UI.enableFeatures([instance.UI.Feature.Annotations]);
+
+    });
+  }, []);
 
   return (
     <>
-        <div className="MyComponent">
-      <div className="header">React sample</div>
-      <div className="webviewer" style={{height:'100vh'}} ref={viewer} ></div>
-    </div>
+      <div className="MyComponent">
+        {viewToolbar && (
+          <div className="header" style={{ display: 'flex', justifyContent: 'center' }}>
+            <MovableToolbar onSelectTool={onSelectTool} />
+          </div>
+        )}
+        <div className="webviewer" style={{ height: '80vh' }} ref={viewer}></div>
+      </div>
     </>
+  );
+};
 
-  )
-}
-
-export default Pdfviewer
-
-
-
+export default Pdfviewer;

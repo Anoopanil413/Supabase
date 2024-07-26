@@ -203,7 +203,7 @@ const CreateChannel = () => {
 
         </div>
             </div>
-        <div style={{width:'50%',padding:'1rem',height:'40vh', overflow:'hidden', scrollBehavior:'smooth'}}>
+        <div style={{width:'50%',padding:'1rem',height:'auto', overflowY: 'auto', scrollBehavior:'smooth'}}>
           <div style={{textAlign:'center', fontWeight:'bolder', fontSize:'1rem'}}>Channels</div>
 
           <div style={{display:'flex', justifyContent:'center', padding:'0 2rem', }}> 

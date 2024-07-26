@@ -29,7 +29,6 @@ const Layouts: React.FC = () => {
 
 
   useEffect(()=>{
-    console.log("current pathnaem",activeTab,pathname=='/chat')
     if(pathname=='/')setActivetab('1')
     if(pathname=='/chat')setActivetab('2')
     if(pathname=='/signin')setActivetab('3')
@@ -83,6 +82,13 @@ const Layouts: React.FC = () => {
               icon: <UserOutlined />,
               label: "try",
               onClick: () => navigate("/try"),
+            },
+            {
+              key: "6",
+              icon: <UserOutlined />,
+              label: "videoCall",
+              onClick: () => navigate("/videoCall"),
+              
             }
           ]}
         />
