@@ -127,7 +127,7 @@ const VideoCall = () => {
 }
 
 const  getRespectiveMediaDevice = async(ifVideoDeviceAvailable:any)=>{
-    let stream 
+    let stream:any  = null
     if(ifVideoDeviceAvailable.length ==0 ){
          return stream =  await navigator.mediaDevices.getUserMedia({audio:true});
     }else{
@@ -142,6 +142,7 @@ const  getRespectiveMediaDevice = async(ifVideoDeviceAvailable:any)=>{
       let ifVideoDeviceAvailable = await getConnectedDevices('videoinput')
 
       const stream = await getRespectiveMediaDevice(ifVideoDeviceAvailable)
+      if(!stream)return
 
       if(!localVideoRef.current)return;
       if(!peerConnectionRef.current)return;

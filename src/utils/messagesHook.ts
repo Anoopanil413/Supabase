@@ -7,7 +7,7 @@ const useMessageSubscription = (channeldat:any, messageReceivedCallback:any) => 
   const dispatch = useDispatch();
   const { messagesSubscription } = useSelector((state:any) => state.users);
 
-  const {currentChannel:channelName,user} = channeldat
+  const {currentChannel:channelName} = channeldat
 
   useEffect(() => {
     dispatch(subscribeToMessages(channeldat));

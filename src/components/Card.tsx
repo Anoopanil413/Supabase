@@ -11,7 +11,7 @@ interface Props{
     children?:ReactNode; 
     onCardClick?:()=>void; 
     onTitleClick?:()=>void;
-    onDescriptionClick?:()=>void;
+    onDescriptionClick?:any;
 }
 
 const ReusableCard = ({ 

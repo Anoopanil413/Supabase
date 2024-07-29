@@ -20,7 +20,7 @@ const FunForm = ({handleSubmit}:FunFormProps) => {
 
     form
       .validateFields({ validateOnly: true })
-      .then((obj:any) => setSubmittable(true) )
+      .then(() => setSubmittable(true) )
       .catch(() => setSubmittable(false));
   }, [form, values]);
 

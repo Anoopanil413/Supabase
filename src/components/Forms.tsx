@@ -19,6 +19,7 @@ export class Forms extends Component {
   }
 
   componentDidUpdate(prevProps: any, prevState: any) {
+    console.log("prevProps",prevProps)
 
     if (prevState !== this.state) {
       this.validateForm();

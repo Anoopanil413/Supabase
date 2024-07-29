@@ -1,8 +1,8 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import Layouts from "./Layout";
 import { useEffect } from "react";
 import { fetchProfile } from "../features/userSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch   } from "react-redux";
 import supabase from "../supabase";
 
 const Protected = () => {
@@ -21,7 +21,8 @@ const Protected = () => {
 
         if (session?.data) {
           const userId = session.data.session?.user.id;
-          await dispatch(fetchProfile(userId));
+         await dispatch(fetchProfile(userId));
+
         }
       } catch (error:any) {
         console.error("Error fetching session:", error.message);
