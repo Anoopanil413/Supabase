@@ -3,6 +3,7 @@ import React, { useRef, useEffect, useState } from 'react';
 
 import './videoChat.css'
 import supabase from '../supabase';
+import { useSelector } from 'react-redux';
 
 
 
@@ -14,6 +15,10 @@ const VideoCall = () => {
     const peerConnectionRef = useRef<RTCPeerConnection | null>(null); 
     const [isCallActive, setIsCallActive] = useState(false);
     const [isScreenSharing, setIsScreenSharing] = useState(false);
+
+    const {profile} = useSelector((state:any)=>state.users);
+
+
 
 
 
@@ -39,7 +44,8 @@ const VideoCall = () => {
     peerConnectionRef.current.onicecandidate = handleICECandidate;
     peerConnectionRef.current.ontrack = handleTrack;
     const channel = supabase.channel('video-call');
-    channel.on('broadcast', { event: 'signal' }, handleSignalingMessage);
+      channel.on('broadcast', { event: 'signal' }, handleSignalingMessage);
+
     channel.subscribe((status:any) => {
       if (status === 'SUBSCRIBED') {
         console.log('Subscribed to video-call channel');
@@ -56,10 +62,12 @@ const VideoCall = () => {
 
   const handleICECandidate = (event:any) => {
 
+    console.log("is the profile id available at ",profile?.id)
     if (event.candidate) {
       sendSignalingMessage({
         type: 'ice-candidate',
         candidate: event.candidate,
+        senderId:profile?.id
       });
     }
   };
@@ -79,8 +87,12 @@ const VideoCall = () => {
 
 
   const handleSignalingMessage = async (payload:any) => {
+
     const { type, ...data } = payload.payload;
+
     if(!peerConnectionRef.current)return
+
+    if(data?.senderId == profile?.id)return
 
     switch (type) {
       case 'offer':
@@ -92,6 +104,7 @@ const VideoCall = () => {
         sendSignalingMessage({
           type: 'answer',
           answer: peerConnectionRef.current.localDescription,
+          senderId:profile?.id
         });
         break;
       case 'answer':
@@ -141,6 +154,7 @@ const  getRespectiveMediaDevice = async(ifVideoDeviceAvailable:any)=>{
       sendSignalingMessage({
         type: 'offer',
         offer: peerConnectionRef?.current.localDescription,
+        senderId:profile.id
       });
 
       setIsCallActive(true);
@@ -154,7 +168,6 @@ const  getRespectiveMediaDevice = async(ifVideoDeviceAvailable:any)=>{
       peerConnectionRef.current.close();
     }
     if(!localVideoRef.current || !remoteVideoRef.current)return
-    console.log("stopping track",localVideoRef)
     if (localVideoRef.current?.srcObject) {
       localVideoRef.current.srcObject.getTracks().forEach((track:any) => track.stop());
     }

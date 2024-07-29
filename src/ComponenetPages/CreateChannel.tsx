@@ -113,7 +113,8 @@ const CreateChannel = () => {
         console.log("ERROR::", error);
         throw new Error(error.message);
       }
-
+      setDescription('');
+      setChannelName('');
 
       return chanlData;
     } else {
@@ -125,7 +126,8 @@ const CreateChannel = () => {
         console.log("ERROR::", error);
         throw new Error(error.message);
       }
-
+      setDescription('');
+      setChannelName('');
 
       return data;
     }

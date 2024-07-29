@@ -77,12 +77,12 @@ const Layouts: React.FC = () => {
               label: "Pdf",
               onClick: () => navigate("/pdf"),
             },
-            {
-              key: "5",
-              icon: <UserOutlined />,
-              label: "try",
-              onClick: () => navigate("/try"),
-            },
+            // {
+            //   key: "5",
+            //   icon: <UserOutlined />,
+            //   label: "try",
+            //   onClick: () => navigate("/try"),
+            // },
             {
               key: "6",
               icon: <UserOutlined />,
