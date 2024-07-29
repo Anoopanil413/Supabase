@@ -11,7 +11,7 @@ interface Props{
     children?:ReactNode; 
     onCardClick?:()=>void; 
     onTitleClick?:()=>void;
-    onDescriptionClick?:any;
+    // onDescriptionClick?:any;
 }
 
 const ReusableCard = ({ 
@@ -22,7 +22,7 @@ const ReusableCard = ({
   children, 
   onCardClick, 
   onTitleClick, 
-  onDescriptionClick 
+  // onDescriptionClick 
 }:Props) => {
 
   let descrip = null 
@@ -37,17 +37,17 @@ const ReusableCard = ({
     descrip = truncateText(description,10)
   }
 
-   onDescriptionClick = ()=>{
-    return(
-      <>
+  //  onDescriptionClick = ()=>{
+  //   return(
+  //     <>
 
-      <Tooltip title="prompt text">
-      <span>Tooltip will show on mouse enter.</span>
-    </Tooltip>
-      </>
-    )
+  //     <Tooltip title="prompt text">
+  //     <span>Tooltip will show on mouse enter.</span>
+  //   </Tooltip>
+  //     </>
+  //   )
 
-  }
+  // }
   
   return (
     <Card
