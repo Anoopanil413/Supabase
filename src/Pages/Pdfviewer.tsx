@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import WebViewer, { WebViewerInstance, } from '@pdftron/webviewer';
 import MovableToolbar from '../components/MovableToolbar';
 
-import  getInstance  from '@pdftron/webviewer'
+// import  getInstance  from '@pdftron/webviewer'
 
 
 const Pdfviewer: React.FC = () => {
@@ -20,7 +20,7 @@ const Pdfviewer: React.FC = () => {
     setCurrentTool(tool.name);
 
     if (currentPdfInstance) {
-      const { Tools } = currentPdfInstance.Core;
+      // const { Tools } = currentPdfInstance.Core;
       // currentPdfInstance.
       switch (tool.name) {
         case 'Edit':
@@ -36,7 +36,7 @@ const Pdfviewer: React.FC = () => {
     }
   };
   useEffect(()=>{
-    const InnerELement = viewer.current
+    // const InnerELement = viewer.current
 
     // if(InnerELement){
 

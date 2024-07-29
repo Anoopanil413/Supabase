@@ -1,12 +1,12 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import  { useCallback, useEffect, useState } from 'react'
 import ChatComp from '../components/Chat'
 import useMessageSubscription from '../utils/messagesHook';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { Avatar, Badge, Button, Drawer, Flex, Input, Layout, List, Menu, Space, Upload } from 'antd';
-import { Content, Header } from 'antd/es/layout/layout';
-import { addMessageToChannel, removeChannelDataonExit, unsubscribeFromChannels, unsubscribeFromMessages } from '../features/userSlice';
-import { MenuFoldOutlined, PaperClipOutlined } from '@ant-design/icons';
+import { Avatar, Badge, Button, Drawer, Layout, List,} from 'antd';
+import { Content } from 'antd/es/layout/layout';
+import { addMessageToChannel, removeChannelDataonExit, unsubscribeFromMessages } from '../features/userSlice';
+// import { MenuFoldOutlined, PaperClipOutlined } from '@ant-design/icons';
 import ChatInput from '../components/chatInput';
 import supabase from '../supabase';
 
@@ -14,7 +14,7 @@ const Chatui = () => {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
-const {currentChannel,profile,channelMessagesOnSubscription,currentChannelname,channels} = useSelector((state:any)=>state.users) ;
+const {currentChannel,profile,currentChannelname,channels} = useSelector((state:any)=>state.users) ;
     if(!currentChannel){
         navigate('/')
     }

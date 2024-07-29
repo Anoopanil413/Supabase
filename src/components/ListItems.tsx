@@ -1,11 +1,10 @@
-import React from 'react';
 import { List, Avatar, Tooltip, Button } from 'antd';
 import chatbg from '../../public/chatbg.jpg'
 import { useSelector } from 'react-redux';
 
 const ItemList = ({ items,handleClickToJoin,handleLeave }:{items:any,handleClickToJoin:any,handleLeave:any}) => {
 
-    const {channelMessagesOnSubscription ,currentChannel} =useSelector((state:any)=>state.users)
+    const {channelMessagesOnSubscription } =useSelector((state:any)=>state.users)
     const handleJoinChannel = (item:any)=>{
         handleClickToJoin(item)
     }

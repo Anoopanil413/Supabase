@@ -1,4 +1,3 @@
-import React from 'react';
 import { Card, Row, Col, Tooltip } from 'antd';
 import { MdVerified } from 'react-icons/md';
 import dayjs from 'dayjs';
@@ -7,10 +6,10 @@ import { truncateText } from '../utils/index';
 dayjs.extend(relativeTime);
 
 export default function Message({ message, isYou }:any) {
-  const countyCode =
-    message.country && message.country !== 'undefined'
-      ? message.country.toLowerCase()
-      : '';
+  // const countyCode =
+  //   message.country && message.country !== 'undefined'
+  //     ? message.country.toLowerCase()
+  //     : '';
 
   return (
     <div style={{ display: 'flex', justifyContent: isYou ? 'flex-end' : 'flex-start' }}>

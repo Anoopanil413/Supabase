@@ -1,4 +1,3 @@
-import React from 'react'
 import Chatui from '../ComponenetPages/Chatui'
 import UserProfileModal from './UserProfile'
 import { useSelector } from 'react-redux'

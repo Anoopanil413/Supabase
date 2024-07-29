@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { Upload, Button, Input, Space, Flex } from 'antd';
 import { PaperClipOutlined, MenuFoldOutlined, CloseOutlined } from '@ant-design/icons';
 

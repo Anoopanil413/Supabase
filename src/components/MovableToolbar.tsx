@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import { Tooltip, Button, Dropdown, Menu } from 'antd';
+import  { useRef } from 'react';
+import { Tooltip, Button,  } from 'antd';
 import { CopyOutlined, DeleteOutlined, EditOutlined, SaveOutlined } from '@ant-design/icons';
 import 'antd/dist/reset.css';
 
@@ -11,10 +11,11 @@ const tools = [
 ];
 
 const MovableToolbar = ({onSelectTool}:any) => {
-  const toolbarRef = useRef(null);
+  const toolbarRef = useRef<HTMLDivElement>(null);
 
   const onMouseDown = (e:any) => {
     const toolbar = toolbarRef.current;
+    if(!toolbar)return
     const shiftX = e.clientX - toolbar.getBoundingClientRect().left;
     const shiftY = e.clientY - toolbar.getBoundingClientRect().top;
 
@@ -38,7 +39,18 @@ const MovableToolbar = ({onSelectTool}:any) => {
     <div
       ref={toolbarRef}
       onMouseDown={onMouseDown}
-      style={toolbarStyle}
+      style={{
+        position: 'absolute',
+      //   top: '200px',
+      //   left: '600px',
+        display: 'flex',
+        gap: '10px',
+        padding: '10px',
+        background: '#fff',
+        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
+        borderRadius: '4px',
+        cursor: 'move',
+      }}
     >
       {tools.map((tool, index) => (
         <Tooltip key={index} title={tool.name}>
@@ -49,18 +61,7 @@ const MovableToolbar = ({onSelectTool}:any) => {
   );
 };
 
-const toolbarStyle = {
-  position: 'absolute',
-//   top: '200px',
-//   left: '600px',
-  display: 'flex',
-  gap: '10px',
-  padding: '10px',
-  background: '#fff',
-  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
-  borderRadius: '4px',
-  cursor: 'move',
-};
+
 
 const buttonStyle = {
   display: 'flex',

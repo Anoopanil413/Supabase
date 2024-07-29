@@ -1,32 +1,33 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Avatar, Badge, Button, Card, Drawer, Layout, Tooltip,  } from 'antd';
+import  { useEffect, useRef, useState } from 'react';
+import { Avatar,  Card, Layout, Tooltip,  } from 'antd';
 // import { useAppContext } from '../context/appContext';
 import Messages from './Messages';
-import { BsChevronDoubleDown } from 'react-icons/bs';
-import { useDispatch, useSelector } from 'react-redux';
-import { unsubscribeFromMessages } from '../features/userSlice';
-import { useNavigate } from 'react-router-dom';
-import useMessageSubscription from '../utils/messagesHook';
+// import { BsChevronDoubleDown } from 'react-icons/bs';
+// import { useDispatch, useSelector } from 'react-redux';
+// import { unsubscribeFromMessages } from '../features/userSlice';
+// import { useNavigate } from 'react-router-dom';
+// import useMessageSubscription from '../utils/messagesHook';
 import chatbg from '../../public/chatbg.jpg'
 import { Header } from 'antd/es/layout/layout';
 
 import avtrbg from '../../public/avatar.jpg'
 import Title from 'antd/es/typography/Title';
 import Paragraph from 'antd/es/typography/Paragraph';
+import { useSelector } from 'react-redux';
 
 const { Content } = Layout;
 
 function ChatComp() {
   const [height, setHeight] = useState(window.innerHeight - 400);
 //   const { scrollRef, onScroll, scrollToBottom, isOnBottom, unviewedMessageCount } = useAppContext();
-const [open, setOpen] = useState(false);
-const dispatch = useDispatch();
-const navigate = useNavigate();
+// const [open, setOpen] = useState(false);
+// const dispatch = useDispatch();
+// const navigate = useNavigate();
 
-const {currentChannel,profile,channelMessagesOnSubscription,currentChannelname,channels} = useSelector((state:any)=>state.users)
+const {currentChannel,channelMessagesOnSubscription,channels} = useSelector((state:any)=>state.users)
 
 
-const messagesEndRef = useRef(null);
+const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleResize = () => setHeight(window.innerHeight - 205);
@@ -34,12 +35,12 @@ const messagesEndRef = useRef(null);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const channelData = {
-    channelName:currentChannel,
-    user:profile
+  // const channelData = {
+  //   channelName:currentChannel,
+  //   user:profile
 
-  }
-  const {unSubscribeFromChannel} = useMessageSubscription(channelData, ()=>{});
+  // }
+  // const {unSubscribeFromChannel} = useMessageSubscription(channelData, ()=>{});
 
   useEffect(() => {
     // Scroll to bottom whenever messages change
@@ -53,6 +54,7 @@ const messagesEndRef = useRef(null);
 
 
   const scrollToBottom = ()=>{
+
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }
 

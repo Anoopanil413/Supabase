@@ -8,7 +8,7 @@ import {
 } from "@ant-design/icons";
 import { Button, Layout, Menu, theme } from "antd";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { Avatar, Badge, Space } from "antd";
+import { Avatar, Badge } from "antd";
 import { logout, setModalView } from "../features/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -19,7 +19,7 @@ const Layouts: React.FC = () => {
 
   const [collapsed, setCollapsed] = useState(false);
 
-  const [modalView, setModalsView] = useState(viewModal.viewModal);
+  // const [modalView, setModalsView] = useState(viewModal.viewModal);
   const [activeTab,setActivetab] = useState("1")
   const {
     token: { colorBgContainer, borderRadiusLG },

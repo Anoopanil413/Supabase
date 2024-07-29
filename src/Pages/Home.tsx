@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from 'react'
 
-import { useDispatch, useSelector } from 'react-redux'
+import {  useSelector } from 'react-redux'
 
-import { fetchProfile, setModalView } from '../features/userSlice'
 import UserProfileModal from './UserProfile'
 import CreateChannel from '../ComponenetPages/CreateChannel'
 
@@ -12,7 +10,7 @@ const Home = () => {
 
 
   const users = useSelector((state:any)=>state.users)
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   
 

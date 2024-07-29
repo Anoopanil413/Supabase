@@ -1,5 +1,5 @@
 import { Button, Steps } from "antd";
-import React, { useState } from "react";
+import  { useState } from "react";
 
 const Stepper = () => {
   const [stepperState, setState] = useState(0);

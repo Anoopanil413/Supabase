@@ -1,4 +1,3 @@
-import React from 'react';
 import { Form, Input, Button } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { createProfile } from '../features/userSlice';

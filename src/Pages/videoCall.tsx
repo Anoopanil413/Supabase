@@ -1,5 +1,5 @@
 
-import React, { useRef, useEffect, useState } from 'react';
+import  { useRef, useEffect, useState } from 'react';
 
 import './videoChat.css'
 import supabase from '../supabase';
@@ -26,6 +26,7 @@ const VideoCall = () => {
 
 
   useEffect(() => {  
+    setIsScreenSharing(false);
     const configuration = { iceServers: [  
         { urls: "stun:stun.l.google.com:19302" },
         { urls: "stun:stun.l.google.com:5349" },
@@ -169,7 +170,8 @@ const  getRespectiveMediaDevice = async(ifVideoDeviceAvailable:any)=>{
     }
     if(!localVideoRef.current || !remoteVideoRef.current)return
     if (localVideoRef.current?.srcObject) {
-      localVideoRef.current.srcObject.getTracks().forEach((track:any) => track.stop());
+      const stream = localVideoRef.current.srcObject as MediaStream;
+      stream.getTracks().forEach((track:any) => track.stop());
     }
     localVideoRef.current.srcObject = null;
     remoteVideoRef.current.srcObject = null;

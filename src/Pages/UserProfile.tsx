@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { Avatar, Button, Descriptions, Form, Input, Upload, message } from 'antd';
+import  { useEffect, useState } from 'react';
+import { Avatar, Form, Input, Upload, UploadFile, message } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { UploadOutlined } from '@ant-design/icons';
 import ReusableModal from '../components/Modal';
-import userSlice, { createProfile } from '../features/userSlice';
+import  { createProfile } from '../features/userSlice';
 import { UserOutlined } from '@ant-design/icons';
 import avtar from '../../public/avatar.jpg'
 
@@ -17,17 +17,17 @@ const UserProfileModal = () => {
   const dispatch = useDispatch();
 
   const [form] = Form.useForm();
-  const [fileList, setFileList] = useState([]);
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
 
-  const showModal = () => {
-    setVisible(viewSlice.viewModal);
-    setEditMode(profile ? true : false);
-    form.setFieldsValue({
-      username: profile?.username,
-      full_name: profile?.full_name,
-      email: profile?.email,
-    });
-  };
+  // const showModal = () => {
+  //   setVisible(viewSlice.viewModal);
+  //   setEditMode(profile ? true : false);
+  //   form.setFieldsValue({
+  //     username: profile?.username,
+  //     full_name: profile?.full_name,
+  //     email: profile?.email,
+  //   });
+  // };
 
   useEffect(()=>{
 
@@ -55,7 +55,7 @@ const UserProfileModal = () => {
       event.preventDefault()
       const values = await form.validateFields()
       const avatar_file = fileList.length ? fileList[0]?.originFileObj : null;
-      const val = await dispatch(createProfile({ ...values, avatar_url: avatar_file }));
+       await dispatch(createProfile({ ...values, avatar_url: avatar_file }));
       setVisible(false);
 
     } catch (error) {

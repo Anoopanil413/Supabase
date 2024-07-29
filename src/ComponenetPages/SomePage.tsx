@@ -21,13 +21,9 @@ const SomeApp = () => {
     };
 
     const {
-        editor,
         toolbarElement,
         editableElements,
-        data,
-        setData,
-        attributes,
-        setAttributes
+
     } = useMultiRootEditor( editorProps );
 
     return (

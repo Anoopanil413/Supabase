@@ -1,6 +1,6 @@
-import React, { Fragment, useCallback, useEffect, useState } from "react";
+import  {  useEffect, useState } from "react";
 import ReusableCard from "../components/Card";
-import { Button, Input, Menu, MenuProps, Upload } from "antd";
+import {  Input, Upload } from "antd";
 import Buttons from "../components/Button";
 import { UploadOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,17 +13,19 @@ import {
   unsubscribeFromChannels,
 } from "../features/userSlice";
 import supabase from "../supabase";
-import imgs from '../../public/imgs.svg'
 import { useNavigate } from "react-router-dom";
 import ItemList from "../components/ListItems";
 import './commonPage.css'
+import type { UploadFile, RcFile } from 'antd/es/upload/interface';
+
+
 
 
 const CreateChannel = () => {
   const [channelName, setChannelName] = useState("");
   const [description, setDescription] = useState("");
-  const [fileList, setFileList] = useState([]);
-  const { channelsSubscription, error, channels,profile } = useSelector(
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const {  channels,profile } = useSelector(
     (state: any) => state.users
   );
   const dispatch = useDispatch();
@@ -34,7 +36,7 @@ const CreateChannel = () => {
   useEffect(() => {
     (async () => {
       await dispatch(fetchInitialChannels());
-      const val = await dispatch(SubscribetoChannels());
+      await dispatch(SubscribetoChannels());
     })();
 
     return () => {
@@ -45,9 +47,9 @@ const CreateChannel = () => {
   const [messages, setMessage] = useState<String | null>(null);
 
 
-  const handleChannelClick = (channelName: any) => {
-    setUsersCurrentChanel(channelName);
-  };
+  // const handleChannelClick = (channelName: any) => {
+  //   setUsersCurrentChanel(channelName);
+  // };
 
   const handleChange = (event: any) => {
     const namef = event.target.name;
@@ -63,7 +65,7 @@ const CreateChannel = () => {
     setFileList(fileList);
   };
 
-  const beforeUpload = (file: any) => {
+  const beforeUpload = (file: RcFile) => {
     const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
     if (!isJpgOrPng) {
       setMessage("You can only upload JPG/PNG file!");
@@ -85,6 +87,7 @@ const CreateChannel = () => {
 
     if (fileList) {
       const images = fileList.length ? fileList[0]?.originFileObj : null;
+      if(!images)return
 
       const { data, error: uploadError } = await supabase.storage
         .from("channel_images")
@@ -134,6 +137,7 @@ const CreateChannel = () => {
   };
 
   const handleLeave = (item:any)=>{
+    console.log("left",item)
 
   }
 

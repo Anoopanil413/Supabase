@@ -44,7 +44,7 @@ export const fetchInitialChannels:any = createAsyncThunk(
 
 export const SubscribetoChannels:any = createAsyncThunk(
   'users/subscribeChannels',
-  async (_, {dispatch,getState,rejectWithValue }) => {
+  async (_, {dispatch,rejectWithValue }) => {
     const channelSubscribed = await supabase
       .channel('channels_chain')
       .on(
@@ -125,7 +125,7 @@ export const subscribeToMessages:any = createAsyncThunk(
 
           users_online.push(user.id);
 
-          const { data, error: updateError } = await supabase
+          const {  error: updateError } = await supabase
           .from('channels')
           .update({ online_users: users_online })
           .eq('id', channelName);
@@ -161,7 +161,7 @@ export const subscribeToMessages:any = createAsyncThunk(
 
     const unsubscribeFromChannel = async()=>{
 
-      const server = await myChannel.unsubscribe()
+       await myChannel.unsubscribe()
 
       const state:any = getState()
       const currentChannel = state?.users?.channels.filter((chanl:any)=>chanl.id == channelName );
@@ -171,7 +171,7 @@ export const subscribeToMessages:any = createAsyncThunk(
 
         users_online.filter((user)=>user != user.id );
 
-        const { data, error: updateError } = await supabase
+        const {  error: updateError } = await supabase
         .from('channels')
         .update({ online_users: users_online })
         .eq('id', channelName);
@@ -191,8 +191,9 @@ export const subscribeToMessages:any = createAsyncThunk(
 
 export const unsubscribeFromMessages:any = createAsyncThunk(
   'users/unsubscribeMessages',
-  async (channelDat, {getState, rejectWithValue }) => {
-    const {currentChannel} = channelDat
+  async (channelDat:any, {getState, rejectWithValue }) => {
+    const {currentChannel} = channelDat;
+
 
 
     const state:any = getState()
@@ -206,7 +207,7 @@ export const unsubscribeFromMessages:any = createAsyncThunk(
   
         const newUsersList =users_online.filter((user)=>user !== state.users.profile.id );
   
-        const { data, error: updateError } = await supabase
+        const { error: updateError } = await supabase
         .from('channels')
         .update({ online_users: newUsersList })
         .eq('id', currentChannel);
@@ -267,7 +268,7 @@ export const createProfile:any = createAsyncThunk('users/createProfile', async (
   
       const { error: upsertError } = await supabase
         .from('profiles')
-        .upsert({ ...profileData, id: userId, avatar_url }, { onConflict: ['id'] });
+        .upsert({ ...profileData, id: userId, avatar_url }, { onConflict: userId });
   
       if (upsertError) {
         throw new Error(upsertError.message);
@@ -283,7 +284,7 @@ export const createProfile:any = createAsyncThunk('users/createProfile', async (
   
       const { error: upsertError } = await supabase
         .from('profiles')
-        .upsert({ ...profileData, id: userId, avatar_url }, { onConflict: ['id'] });
+        .upsert({ ...profileData, id: userId, avatar_url }, { onConflict: userId });
   
       if (upsertError) {
         throw new Error(upsertError.message);

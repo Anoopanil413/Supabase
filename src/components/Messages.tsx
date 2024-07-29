@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { Alert, Avatar, Button, Card, List, Spin, Typography } from 'antd';
+import {  Avatar, List, Typography } from 'antd';
 // import { useAppContext } from '../context/appContext';
-import Message from './Message';
+// import Message from './Message';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
 
-const { Text } = Typography;
+// const { Text } = Typography;
 
 export default function Messages() {
 //   const { username, loadingInitial, error, getMessagesAndSubscribe, messages } = useAppContext();
