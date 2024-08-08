@@ -139,9 +139,12 @@ const Pdfviewer: React.FC = () => {
       setViewToolbar(true);
       setPdfInstance(instance);
 
-      // const { documentViewer, annotationManager } = instance.Core;
+      const { documentViewer } = instance.Core;
 
-      instance.UI.enableFeatures([instance.UI.Feature.Annotations]);
+      // instance.UI.enableFeatures([instance.UI.Feature.Annotations]);
+
+
+
 
     });
   }, []);

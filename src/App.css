@@ -183,3 +183,12 @@ text-align: left;
   grid-template-columns: 1fr 1fr;
   
 }
+
+
+.potree_container{
+  background-color: black;
+  display: flex;
+  flex-direction: column;
+  height: 950px;
+  position: relative;
+}

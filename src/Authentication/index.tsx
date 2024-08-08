@@ -12,6 +12,8 @@ import Chat from "../Pages/Chat";
 import Pdfviewer from "../Pages/Pdfviewer";
 import Try from "../Pages/Try";
 import VideoCall from "../Pages/videoCall";
+import Editor from "../Pages/Editor";
+import PotreeViewer from "../Pages/Potree";
 
 
 
@@ -24,6 +26,8 @@ import VideoCall from "../Pages/videoCall";
           <Route path="pdf" element={<Pdfviewer/>}/>
           <Route path="try" element={<Try/>}/>
           <Route path="videoCall" element={<VideoCall/>}/>
+          <Route path="potree" element = {<PotreeViewer />}/>
+          <Route path="editor" element = {<Editor/>}/>
         </Route>
         <Route path="signin" element={<Signin />} />
         <Route path="signup" element={<Signup />} />
