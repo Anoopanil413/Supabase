@@ -24694,9 +24694,7 @@
 			}
 
 			const children = object.children;
-
 			for ( let i = 0, l = children.length; i < l; i ++ ) {
-
 				projectObject( children[ i ], camera, groupOrder, sortObjects );
 
 			}
@@ -79094,7 +79092,9 @@ ENDSEC
 						name: 'Angle'});
 
 					let measurementsRoot = $("#jstree_scene").jstree().get_json("measurements");
+
 					let jsonNode = measurementsRoot.children.find(child => child.data.uuid === measurement.uuid);
+
 					$.jstree.reference(jsonNode.id).deselect_all();
 					$.jstree.reference(jsonNode.id).select_node(jsonNode.id);
 				}
@@ -79407,7 +79407,8 @@ ENDSEC
 						"data": object
 					}, 
 					"last", false, false);
-				
+					console.log("newmeasurementnodeID",parent,text,icon,object)
+
 				if(object.visible){
 					tree.jstree('check_node', nodeID);
 				}else {
@@ -79695,7 +79696,7 @@ ENDSEC
 			let onMeasurementRemoved = (e) => {
 				let measurementsRoot = $("#jstree_scene").jstree().get_json("measurements");
 				let jsonNode = measurementsRoot.children.find(child => child.data.uuid === e.measurement.uuid);
-				
+				console.log("onMeasurementRemoved","function")
 				tree.jstree("delete_node", jsonNode.id);
 			};
 
@@ -79775,6 +79776,7 @@ ENDSEC
 
 			this.viewer.addEventListener("scene_changed", (e) => {
 				propertiesPanel.setScene(e.scene);
+				console.log("somescene changes happening")
 
 				e.oldScene.removeEventListener("pointcloud_added", onPointCloudAdded);
 				e.oldScene.removeEventListener("measurement_added", onMeasurementAdded);

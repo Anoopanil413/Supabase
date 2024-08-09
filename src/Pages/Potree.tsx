@@ -7,6 +7,10 @@ import React, { useEffect, useRef, useState } from 'react';
 
 
 
+
+
+
+
 declare global {
   interface Window {
     Potree: any;
@@ -73,14 +77,6 @@ const PotreeViewer: React.FC = () => {
       const Potree = window.Potree;
       const viewer = new Potree.Viewer(viewerElem);
 
-
-      viewer.addEventListener('annotation_added', (e: any) => {
-        const annotation = e.annotation;
-        console.log("checking the event",e,"Heloooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo",annotation)
-        // setAnnotations((prevAnnotations) => [...prevAnnotations, annotation]);
-      });
-
-
       viewer.setEDLEnabled(true);
       viewer.setFOV(60);
       viewer.setPointBudget(1 * 1000 * 1000);
@@ -128,6 +124,38 @@ const PotreeViewer: React.FC = () => {
     }
   }, [loadedScript]);
 
+  useEffect(()=>{
+    // const jsTreeElement = document.getElementById('jstree_scene');
+
+    const updateMeasurements = () => {
+      const viewerref = viewerContainerRef?.current
+
+      let measurementsRoot = $("#jstree_scene").jstree().get_json("measurements");
+      let annotationsRoot = $("#jstree_scene").jstree().get_json("annotations");
+
+      console.log(annotationsRoot,"measurementsRoot",viewerref)
+
+      // const jsTreeInstance = $.jstree.reference(jsTreeElement);
+      // console.log("is something happening",$.jstree.reference(jsTreeElement))
+      // if (jsTreeInstance) {
+      //   const measurementsRoot = jsTreeInstance.get_json("measurements");
+      //   // setMeasurements(measurementsRoot.children);
+      //   console.log('measurementsRoot.children',measurementsRoot.children)
+      // }
+    };
+    // console.log("jsTreeElement",jsTreeElement)
+
+      // updateMeasurements()
+
+
+      const intervalId = setInterval(updateMeasurements, 5000)
+    
+
+    return () => clearInterval(intervalId);
+
+
+  },[loadedScript])
+
   return (
     <div id="potree-root">
 
@@ -137,9 +165,8 @@ const PotreeViewer: React.FC = () => {
       </div>
       <div id='potree_sidebar_container' className='potree_sidebar_container'>
       </div> 
- 
 
-
+      <div id='dummy' style={{width:'40px',height:'40px',backgroundColor:'red'}}></div>
 
     </div>
   );

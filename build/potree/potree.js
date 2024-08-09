@@ -9685,6 +9685,8 @@
 
 		computeGroups( geometry ) {
 
+			console.log('geometry9688',geometry)
+
 			const groups = [];
 
 			let group, i;
@@ -52359,6 +52361,8 @@
 		}
 
 		addMarker (point) {
+			document.getElementById('dummy').innerHTML = '<p>Boomm</p>';
+			console.log("addMarker52362",point)
 			this.points.push(point);
 
 			let sphere = new Mesh(this.sphereGeometry, this.createSphereMaterial());
@@ -53914,6 +53918,9 @@
 		};
 
 		addMarker (point) {
+			document.getElementById('dummy').innerHTML = '<p>Boomm</p>';
+
+			console.log('addMarker 53918')
 			if (point.x != null) {
 				point = {position: point};
 			}else if(point instanceof Array){
@@ -53986,6 +53993,8 @@
 
 			{ // Event Listeners
 				let drag = (e) => {
+
+					console.log("drag53991")
 					let I = Utils.getMousePointCloudIntersection(
 						e.drag.end, 
 						e.viewer.scene.getActiveCamera(), 
@@ -54015,6 +54024,7 @@
 				};
 
 				let drop = e => {
+					console.log('drop54021')
 					let i = this.spheres.indexOf(e.drag.object);
 					if (i !== -1) {
 						this.dispatchEvent({
@@ -54068,6 +54078,7 @@
 		};
 
 		setMarker (index, point) {
+			console.log('setMarker54075')
 			this.points[index] = point;
 
 			let event = {
@@ -54082,6 +54093,8 @@
 		}
 
 		setPosition (index, position) {
+			console.log('setPosition54090')
+
 			let point = this.points[index];
 			point.position.copy(position);
 
@@ -54097,6 +54110,8 @@
 		};
 
 		getArea () {
+			console.log('getArea54107')
+
 			let area = 0;
 			let j = this.points.length - 1;
 
@@ -54150,6 +54165,8 @@
 		};
 
 		getAngle (index) {
+			console.log('getASmhgle54163')
+
 			if (this.points.length < 3 || index >= this.points.length) {
 				return 0;
 			}
@@ -54175,6 +54192,8 @@
 		// }
 
 		update () {
+			console.log('getupdate54189')
+
 			if (this.points.length === 0) {
 				return;
 			} else if (this.points.length === 1) {
@@ -54530,6 +54549,7 @@
 		}
 
 		addMarker() {
+			console.log('addMarker 54547')
 
 			let marker = new Mesh();
 
@@ -64364,6 +64384,7 @@ void main() {
 	}
 
 	function createMeasurementData(measurement){
+		console.log("createMeasurementData64367",measurement)
 
 		const data = {
 			uuid: measurement.uuid,
@@ -65131,6 +65152,8 @@ void main() {
 
 	function loadMeasurement(viewer, data){
 
+
+		console.log("viewerdatameasurements65136",viewer.scene.measurements)
 		const duplicate = viewer.scene.measurements.find(measure => measure.uuid === data.uuid);
 		if(duplicate){
 			return;
@@ -65362,6 +65385,8 @@ void main() {
 	}
 
 	async function loadProject(viewer, data){
+
+		console.log('656369',viewer, data)
 
 		if(data.type !== "Potree"){
 			console.error("not a valid Potree project");
@@ -68489,6 +68514,7 @@ void main() {
 		}
 		
 		update(){
+			console.log("update",68510)
 			let camera = this.viewer.scene.getActiveCamera();
 			let domElement = this.renderer.domElement;
 			let measurements = this.viewer.scene.measurements;
@@ -68661,6 +68687,7 @@ void main() {
 		}
 
 		render(){
+			console.log("somerender68669",this.viewer)
 			this.viewer.renderer.render(this.scene, this.viewer.scene.getActiveCamera());
 		}
 	};
@@ -71452,6 +71479,7 @@ void main() {
 		};
 		
 		addMeasurement(measurement){
+			console.log('addMeasurement71477')
 			measurement.lengthUnit = this.lengthUnit;
 			measurement.lengthUnitDisplay = this.lengthUnitDisplay;
 			this.measurements.push(measurement);
@@ -73884,6 +73912,7 @@ ENDSEC
 		}
 
 		recompute () {
+			console.log("recompute",73907)
 			if (!this.profile) {
 				return;
 			}
@@ -79501,6 +79530,7 @@ ENDSEC
 		}
 
 		initScene(){
+			console.log('initsceneeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
 
 			let elScene = $("#menu_scene");
 			let elObjects = elScene.next().find("#scene_objects");
@@ -79757,6 +79787,8 @@ ENDSEC
 
 
 			let onPointCloudAdded = (e) => {
+				console.log("onPointCloudAdded79766")
+
 				let pointcloud = e.pointcloud;
 				let cloudIcon = `${Potree.resourcePath}/icons/cloud.svg`;
 				let node = createNode(pcID, pointcloud.name, cloudIcon, pointcloud);
@@ -79771,6 +79803,7 @@ ENDSEC
 			};
 
 			let onMeasurementAdded = (e) => {
+				console.log("gettingmeasurement79780")
 				let measurement = e.measurement;
 				let icon = Utils.getMeasurementIcon(measurement);
 				createNode(measurementID, measurement.name, icon, measurement);
@@ -79797,6 +79830,8 @@ ENDSEC
 			};
 
 			let onAnnotationAdded = (e) => {
+				console.log("gettingmeasurement79809")
+
 				let annotation = e.annotation;
 
 				let annotationIcon = `${Potree.resourcePath}/icons/annotation.svg`;
@@ -79805,6 +79840,7 @@ ENDSEC
 				this.annotationMapping.set(annotation, annotationID);
 
 				annotation.addEventListener("annotation_changed", (e) => {
+					console.log("annotationchanged79834",e)
 					let annotationsRoot = $("#jstree_scene").jstree().get_json("annotations");
 					let jsonNode = annotationsRoot.children.find(child => child.data.uuid === annotation.uuid);
 					
@@ -79883,6 +79919,8 @@ ENDSEC
 			this.viewer.scene.annotations.addEventListener("annotation_added", onAnnotationAdded);
 
 			let onMeasurementRemoved = (e) => {
+				console.log("onMeasurementRemoved79897")
+
 				let measurementsRoot = $("#jstree_scene").jstree().get_json("measurements");
 				let jsonNode = measurementsRoot.children.find(child => child.data.uuid === e.measurement.uuid);
 				
@@ -80245,6 +80283,7 @@ ENDSEC
 				};
 
 				this.viewer.addEventListener("update", (e) => {
+					console.log('update80277')
 					let extent = this.viewer.filterPointSourceIDRange;
 
 					if(!initialized){
@@ -80782,6 +80821,8 @@ ENDSEC
 		}
 
 		startInsertion (args = {}) {
+			console.log("startInsertion80798")
+
 			let domElement = this.viewer.renderer.domElement;
 
 			let annotation = new Annotation({
@@ -80820,6 +80861,7 @@ ENDSEC
 			domElement.addEventListener('mouseup', insertionCallback, true);
 
 			let drag = (e) => {
+				console.log('drag80855')
 				let I = Utils.getMousePointCloudIntersection(
 					e.drag.end, 
 					e.viewer.scene.getActiveCamera(), 
@@ -80835,6 +80877,7 @@ ENDSEC
 			};
 
 			let drop = (e) => {
+				console.log('drop80871',e)
 				this.viewer.scene.scene.remove(this.s);
 				this.s.removeEventListener("drag", drag);
 				this.s.removeEventListener("drop", drop);
@@ -81160,6 +81203,7 @@ ENDSEC
 		}
 
 		onMouseUp (e) {
+			console.log("onMouseUp811197")
 			if (this.logMessages) console.log(this.constructor.name + ': onMouseUp');
 
 			e.preventDefault();
@@ -81256,6 +81300,7 @@ ENDSEC
 		}
 
 		onMouseMove (e) {
+			console.log('onMouseMove81274')
 			e.preventDefault();
 
 			let rect = this.domElement.getBoundingClientRect();
@@ -82061,6 +82106,7 @@ ENDSEC
 			};
 
 			let drop = e => {
+				console.log("drop82100")
 				this.dispatchEvent({type: 'end'});
 			};
 
@@ -82376,6 +82422,8 @@ ENDSEC
 			};
 
 			let onMouseDown = e => {
+				console.log('drop82432')
+
 				let I = Utils.getMousePointCloudIntersection(
 					e.mouse, 
 					this.scene.getActiveCamera(), 
@@ -82392,6 +82440,7 @@ ENDSEC
 			};
 
 			let drop = e => {
+				console.log('drop82432')
 				this.dispatchEvent({type: 'end'});
 			};
 
@@ -82932,6 +82981,7 @@ ENDSEC
 		/* GLTFREGISTRY */
 
 		function GLTFRegistry() {
+			console.log('GLTFRegistry82975')
 
 			var objects = {};
 
