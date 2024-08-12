@@ -111,13 +111,12 @@ const PotreeViewer: React.FC = () => {
           const material = pointcloud.material;
 
           material.activeAttributeName = 'rgba';
-          material.minSize = 2;
+          material.minSize = 1;
           material.pointSizeType = Potree.PointSizeType.FIXED;
 
           viewer.scene.addPointCloud(pointcloud);
           viewer.fitToScreen();
 
-          console.log('This is the url', url);
         },
         (e: any) => console.error('ERROR: ', e)
       );
@@ -128,12 +127,12 @@ const PotreeViewer: React.FC = () => {
     // const jsTreeElement = document.getElementById('jstree_scene');
 
     const updateMeasurements = () => {
-      const viewerref = viewerContainerRef?.current
+      // const viewerref = viewerContainerRef?.current
 
-      let measurementsRoot = $("#jstree_scene").jstree().get_json("measurements");
-      let annotationsRoot = $("#jstree_scene").jstree().get_json("annotations");
+      // let measurementsRoot = $("#jstree_scene").jstree().get_json("measurements");
+      // let annotationsRoot = $("#jstree_scene").jstree().get_json("annotations");
 
-      console.log(annotationsRoot,"measurementsRoot",viewerref)
+      // console.log(annotationsRoot,"measurementsRoot",viewerref)
 
       // const jsTreeInstance = $.jstree.reference(jsTreeElement);
       // console.log("is something happening",$.jstree.reference(jsTreeElement))
@@ -148,10 +147,10 @@ const PotreeViewer: React.FC = () => {
       // updateMeasurements()
 
 
-      const intervalId = setInterval(updateMeasurements, 5000)
+      // const intervalId = setInterval(updateMeasurements, 5000)
     
 
-    return () => clearInterval(intervalId);
+    // return () => clearInterval(intervalId);
 
 
   },[loadedScript])

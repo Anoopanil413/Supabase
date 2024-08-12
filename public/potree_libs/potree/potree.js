@@ -60224,6 +60224,8 @@ void main() {
 
 		getPointsInBox(boxNode){
 
+			console.log("getPointsInBox60227",boxNode)
+
 			if(!this.sceneNode){
 				return null;
 			}
@@ -60236,6 +60238,7 @@ void main() {
 
 			let worldToBox = boxNode.matrixWorld.clone().invert();
 			let objectToBox = new Matrix4().multiplyMatrices(worldToBox, this.sceneNode.matrixWorld);
+			console.log("attributes60239",attributes)
 
 			let inBox = [];
 
@@ -74069,7 +74072,7 @@ ENDSEC
 					<th>x</th>
 					<th>y</th>
 					<th>z</th>
-					<th></th>
+					<th>mycoordinate</th>
 				</tr>
 			</table>
 		`);
@@ -74086,6 +74089,7 @@ ENDSEC
 					<td><span>${x}</span></td>
 					<td><span>${y}</span></td>
 					<td><span>${z}</span></td>
+					<td><span>'sdfkfd'</span></td>
 					<td align="right" style="width: 25%">
 						<img name="copy" title="copy" class="button-icon" src="${copyIconPath}" style="width: 16px; height: 16px"/>
 					</td>
@@ -74112,7 +74116,7 @@ ENDSEC
 			let elTable = $('<table class="measurement_value_table"></table>');
 
 			let point = this.measurement.points[0];
-			console.log('this.measurement ',this.measurement.points[0])
+			console.log('this.measurement74116 ',this.measurement.points[0])
 
 			for(let attributeName of Object.keys(point)){
 				if(attributeName === "position"){
@@ -74235,6 +74239,7 @@ ENDSEC
 
 	class PointPanel extends MeasurePanel{
 		constructor(viewer, measurement, propertiesPanel){
+			console.log("PointPanel74239")
 			super(viewer, measurement, propertiesPanel);
 
 			let removeIconPath = Potree.resourcePath + '/icons/remove.svg';
@@ -76380,6 +76385,7 @@ ENDSEC
 		
 
 		setMeasurement(object){
+			console.log("setMeasurement76386",object)
 
 			let TYPE = {
 				DISTANCE: {panel: DistancePanel},
@@ -79571,6 +79577,8 @@ ENDSEC
 				let pointcloud = e.pointcloud;
 				let cloudIcon = `${Potree.resourcePath}/icons/cloud.svg`;
 				let node = createNode(pcID, pointcloud.name, cloudIcon, pointcloud);
+				console.log("onPointCloudAdded79580")
+
 
 				pointcloud.addEventListener("visibility_changed", () => {
 					if(pointcloud.visible){
@@ -79582,6 +79590,7 @@ ENDSEC
 			};
 
 			let onMeasurementAdded = (e) => {
+				console.log("onMeasurementAdded79591")
 				let measurement = e.measurement;
 				let icon = Utils.getMeasurementIcon(measurement);
 				createNode(measurementID, measurement.name, icon, measurement);
@@ -80598,7 +80607,9 @@ ENDSEC
 				title: "Annotation Title",
 				description: `Annotation Description`
 			});
+
 			this.dispatchEvent({type: 'start_inserting_annotation', annotation: annotation});
+			console.log('start_inserting_annotation80611')
 
 			const annotations = this.viewer.scene.annotations;
 			annotations.add(annotation);
@@ -87831,7 +87842,7 @@ ENDSEC
 			this.messages = [];
 			this.elMessages = $(`
 		<div id="message_listing" 
-			style="position: absolute; z-index: 1000; left: 10px; bottom: 10px">
+			style="position: absolute; z-index: 1000; left: 10px; bottom: 10px; color:red ">
 		</div>`);
 			$(domElement).append(this.elMessages);
 			

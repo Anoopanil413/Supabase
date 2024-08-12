@@ -14,6 +14,8 @@ import Try from "../Pages/Try";
 import VideoCall from "../Pages/videoCall";
 import Editor from "../Pages/Editor";
 import PotreeViewer from "../Pages/Potree";
+import LocationData from "../ComponenetPages/Location";
+import Scrapper from "../ComponenetPages/Scrapper";
 
 
 
@@ -28,6 +30,8 @@ import PotreeViewer from "../Pages/Potree";
           <Route path="videoCall" element={<VideoCall/>}/>
           <Route path="potree" element = {<PotreeViewer />}/>
           <Route path="editor" element = {<Editor/>}/>
+          <Route path="location" element = {<LocationData/>}/>
+          <Route path="scrap" element = {<Scrapper/>}/>
         </Route>
         <Route path="signin" element={<Signin />} />
         <Route path="signup" element={<Signup />} />
