@@ -1,5 +1,8 @@
+import { Button } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
+import { pointDAta } from '../utils/data';
 // import '../../build/potree/potree.css'
+
 
 
 
@@ -20,6 +23,8 @@ declare global {
 const PotreeViewer: React.FC = () => {
   const viewerContainerRef = useRef<HTMLDivElement>(null);
   const [loadedScript, setScriptLoaded] = useState(false);
+  const [potreeInstance, setPotreeInstance] = useState<any>();
+  const [viewerInstance, setViewerInstance] = useState<any>();
 
   useEffect(() => {
     const loadScript = (src: string) => {
@@ -75,6 +80,8 @@ const PotreeViewer: React.FC = () => {
       if (!viewerElem) return;
 
       const Potree = window.Potree;
+      setPotreeInstance(Potree);
+
       const viewer = new Potree.Viewer(viewerElem);
 
       viewer.setEDLEnabled(true);
@@ -98,7 +105,7 @@ const PotreeViewer: React.FC = () => {
             nextElement.style.display = 'block';
           }
         }
-
+        setViewerInstance(viewer)
         viewer.toggleSidebar();
       });
 
@@ -152,8 +159,30 @@ const PotreeViewer: React.FC = () => {
 
     // return () => clearInterval(intervalId);
 
+    if(viewerInstance && potreeInstance){
+      
+       renderMeasurements()
+    }
+    
+  },[viewerInstance,potreeInstance])
+  
+  const renderMeasurements = async()=>{
+    console.log('enteringtherender')
+    const somedata = await potreeInstance.loadProject(viewerInstance,pointDAta)
+    console.log('somedata',somedata)
 
-  },[loadedScript])
+  }
+
+  const handleSAveInstance = async()=>{
+
+    console.log("potreeInstanceviewerInstance",potreeInstance,viewerInstance)
+
+    if(!potreeInstance || !viewerInstance)return
+    const  data =  await potreeInstance.saveProject(viewerInstance)
+    console.log("somedatasaved",data)
+  }
+
+  
 
   return (
     <div id="potree-root">
@@ -165,7 +194,11 @@ const PotreeViewer: React.FC = () => {
       <div id='potree_sidebar_container' className='potree_sidebar_container'>
       </div> 
 
-      <div id='dummy' style={{width:'40px',height:'40px',backgroundColor:'red'}}></div>
+      <div id='dummy' style={{width:'40px',height:'40px',backgroundColor:'red'}}>
+        <Button onClick={
+          handleSAveInstance
+          }>save</Button>
+      </div>
 
     </div>
   );

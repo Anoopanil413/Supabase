@@ -26595,6 +26595,8 @@
 
 	function Skeleton( bones = [], boneInverses = [] ) {
 
+		console.log('Skeleton26598')
+
 		this.uuid = MathUtils.generateUUID();
 
 		this.bones = bones.slice( 0 );
@@ -79407,6 +79409,8 @@ ENDSEC
 			});
 
 			let createNode = (parent, text, icon, object) => {
+
+				console.log("creatingnode79413",parent, "nowtext==========>",text,"nowtext==========>", icon,"nowtext==========>", object)
 				let nodeID = tree.jstree('create_node', parent, { 
 						"text": text, 
 						"icon": icon,

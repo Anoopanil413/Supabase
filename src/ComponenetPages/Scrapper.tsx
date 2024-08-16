@@ -2,8 +2,13 @@ import React, { useEffect } from 'react'
 
 import urlMetadata from'url-metadata'
 
+import ogs from 'open-graph-scraper';
+
+
 
 const Scrapper = () => {
+  const opt2 = { url: 'http://ogp.me/' };
+
     const options = {
         // custom request headers
         requestHeaders: {
@@ -45,9 +50,8 @@ const Scrapper = () => {
 
     const fetchMetadata = async()=>{
         try {
-            const url = 'https://www.npmjs.com/package/url-metadata';
+            const url = 'http://127.0.0.1:5173';
             const metadata = await urlMetadata(url,options);
-            console.log(metadata);
             return metadata
           } catch (err) {
             console.log(err);
@@ -61,7 +65,19 @@ const Scrapper = () => {
 
             console.log('fetched',fetched)
 
+
+
         })()
+
+
+  //       ogs(opt2)
+  // .then((data) => {
+  //   const { error, html, result, response } = data;
+  //   console.log('error:', error);  // This returns true or false. True if there was an error. The error itself is inside the result object.
+  //   console.log('html:', html); // This contains the HTML of page
+  //   console.log('resultnpm i open-graph-scraper:', result); // This contains all of the Open Graph results
+  //   console.log('response:', response); // This contains response from the Fetch API
+  // })
 
 
     },[])
